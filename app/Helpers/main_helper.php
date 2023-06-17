@@ -1,4 +1,7 @@
 <?php
+
+use Config\Database;
+
 if (!function_exists('getMimeType')) {
     function getMimeType($ext)
     {
@@ -223,64 +226,43 @@ if (!function_exists('random')) {
 if (!function_exists('is_login')) {
     function is_login($role = null, $user = null, $callback = null)
     {
-        // /** @var CI_Controller $ci */
-        // $ci = &get_instance();
-        // if (!JWT_AUTH)
-        //     $userdata = $ci->session->userdata('login'); //sessiondata('login')
-        // else {
-        //     $token = getBearerToken();
-        //     list($isLogin, $data) = verfify_token($token);
-        // }
-        // if (!empty($userdata) && SYNC_DATAUSER) {
-        //     $u  = $ci->db->select('users.username, users.role, users.photo,profile.*')
-        //         ->where('username', $userdata['username'])
-        //         ->where('email', $userdata['email'])
-        //         ->from('users')->join('profile', 'users.id = profile.uid')
-        //         ->get()->result_array();
-        //     $ci->db->reset_query();
-        //     if (count($u) > 1 || empty($u))
-        //         return false;
-        //     else
-        //         $ci->session->set_userdata(['login' => $u[0]]);
+        $session = session();
+        $db = Database::connect();
 
-        //     $userdata = $ci->session->userdata('login');
-        // }
-        // if (!empty($callback) && is_callable($callback))
-        //     return $callback($role, $user, $userdata);
+        $userdata = $session->get('login');
+        if (!empty($userdata) && SYNC_DATAUSER) {
+            $u  = $db->table('users')->select('*')
+                ->where('username', $userdata['username'])
+                ->get()->getResultArray();
+                
+            if (count($u) > 1 || empty($u))
+                return false;
+            else
+                $session->set('login', $u[0]);
 
-        // if(!empty($userdata) && !isset($userdata['role'])){
-        //     if(!empty($user)){
-        //         return $userdata['username'] == $user;
-        //     }else{
-        //         return !empty($userdata);
-        //     }
-        // }elseif(empty($userdata)) return false;
+            $userdata = $u[0];
+        }
+
+        if (!empty($callback) && is_callable($callback))
+            return $callback($role, $user, $userdata);
+
+        if(!empty($userdata) && !isset($userdata['role'])){
+            if(!empty($user)){
+                return $userdata['username'] == $user;
+            }else{
+                return !empty($userdata);
+            }
+        }elseif(empty($userdata)) return false;
         
-        // if (empty($role) && empty($user)) {
-        //     if (JWT_AUTH)
-        //         return $isLogin;
-        //     else
-        //         return !empty($userdata);
-        // } elseif (!empty($userdata) && !empty($role) && empty($user)) {
-        //     if (JWT_AUTH)
-        //         return $data['role'] == $role;
-        //     elseif (!JWT_AUTH && $role == 'bendahara')
-        //         return $userdata['role'] == 'bendahara 1' || $userdata['role'] == 'bendahara 2';
-        //     elseif (!JWT_AUTH && $role == 'admin')
-        //         return $userdata['role'] == 'admin';
-        //     elseif (!JWT_AUTH && $role != 'bendahara')
-        //         return $userdata['role'] == $role;
-        // } elseif (!empty($userdata) && empty($role) && !empty($user)) {
-        //     if (JWT_AUTH)
-        //         $data['username'] == $user;
-        //     else
-        //         return $userdata['username'] == $user;
-        // } elseif (!empty($userdata) && !empty($role) && !empty($user)) {
-        //     if (JWT_AUTH)
-        //         return $data['username'] == $user && $data['role'] == $role;
-        //     else
-        //         return $userdata['username'] == $user && $userdata['role'] == $role;
-        // }
+        if (empty($role) && empty($user)) {
+            return !empty($userdata);
+        } elseif (!empty($userdata) && !empty($role) && empty($user)) {
+            return is_array($role) ? in_array($userdata['role'], $role) : $userdata['role'] == $role;
+        } elseif (!empty($userdata) && empty($role) && !empty($user)) {
+            return is_array($user) ? in_array($userdata['username'], $user) : $userdata['username'] == $user;
+        } elseif (!empty($userdata) && !empty($role) && !empty($user)) {
+           return $userdata['username'] == $user && $userdata['role'] == $role;
+        }
     }
 }
 

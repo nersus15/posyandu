@@ -11,7 +11,7 @@ class UserSeeder extends Seeder
         $data = [
             'username' => 'dev',
             'email'    => 'dev@mail.com',
-            'password' => password_hash('kambing15', PASSWORD_DEFAULT)
+            'password' => password_hash('dev', PASSWORD_DEFAULT)
         ];
 
         // Using Query Builder

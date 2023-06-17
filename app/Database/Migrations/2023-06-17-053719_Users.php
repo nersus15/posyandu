@@ -18,22 +18,52 @@ class Users extends Migration
                 'constraint' => '92',
                 'null' => false,
             ],
+            'role' => [
+                'type' => 'VARCHAR',
+                'constraint' => '18',
+                'null' => false,
+                'default' => 'su'
+            ],
+            'nama_lengkap' => [
+                'type' => 'VARCHAR',
+                'constraint' => '46',
+                'default' => null,
+                'null' => true,
+            ],
             'email' => [
                 'type' => 'VARCHAR',
                 'constraint' => '46',
                 'default' => null,
                 'null' => true,
             ],
-            'profile' => [
+            'hp' => [
                 'type' => 'VARCHAR',
-                'constraint' => '8',
+                'constraint' => '15',
+                'default' => null,
                 'null' => true,
-                'default' => null
-            ]
+            ],
+            'alamat' => [
+                'type' => 'VARCHAR',
+                'constraint' => '46',
+                'default' => null,
+                'null' => true,
+            ],
+            'photo' => [
+                'type' => 'VARCHAR',
+                'constraint' => '15',
+                'default' => 'default.jpg',
+                'null' => true
+            ],
+            'faskes' => [
+                'type' => 'VARCHAR',
+                'constraint' => '15',
+                'default' => null,
+                'null' => true,
+            ],
         ]);
         $this->forge->addKey('username', true, true);
-        $this->forge->addKey('email', false, true);
-        $this->forge->addForeignKey('profile', 'profile', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('hp', true, true);
+        $this->forge->addKey('email', true, true);
         $this->forge->createTable('users');
     }
 
