@@ -1,13 +1,18 @@
   <!-- Content Wrapper. Contains page content -->
   <?php
-    $header['title'] = 'Dashboard';
     if (!isset($navbarOpt))
         $navbarOpt = [];
 
     if (!isset($sidebarOpt))
         $sidebarOpt = [];
-        
-    echo $this->include('components/header', $header);
+
+    if (!isset($dataHeader))
+        $dataHeader = [];
+
+    if (!isset($dataFooter))
+        $dataFooter = [];
+
+    echo $this->include('components/header', $dataHeader);
     echo $this->include('components/navbar', $navbarOpt);
     echo $this->include('components/sidebar', $sidebarOpt);
     ?>
@@ -63,4 +68,4 @@
   <!-- /.content-wrapper -->
 
   <?php
-    echo $this->include('components/footer');
+    echo $this->include('components/footer', $dataFooter);

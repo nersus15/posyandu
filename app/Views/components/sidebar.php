@@ -1,5 +1,6 @@
 <?php
-if (isset($sidebarOpt)) extract($sidebarOpt);
+    if(isset($sidebarOpt) && is_array($sidebarOpt) && !empty($sidebarOpt)) extract($sidebarOpt);
+
 if (!isset($activeMenu))
   $activeMenu = '';
 ?>
@@ -41,28 +42,28 @@ if (!isset($activeMenu))
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview ml-3">
             <li class="nav-item">
               <a href="<?= base_url('anak/list/05') ?>" class="nav-link <?= $activeMenu == 'bayi05' ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+                <!-- <i class="far fa-circle nav-icon"></i> -->
                 <p>Umur 0-5 bulan</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="<?= base_url('anak/list/611') ?>" class="nav-link <?= $activeMenu == 'bayi611' ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+                <!-- <i class="far fa-circle nav-icon"></i> -->
                 <p>Umur 6-11 bulan</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="<?= base_url('anak/list/1223') ?>" class="nav-link <?= $activeMenu == 'bayi1223' ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+                <!-- <i class="far fa-circle nav-icon"></i> -->
                 <p>Umur 12-23 bulan</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="<?= base_url('anak/list/2459') ?>" class="nav-link <?= $activeMenu == 'bayi2459' ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+                <!-- <i class="far fa-circle nav-icon"></i> -->
                 <p>Umur 24-59 bulan</p>
               </a>
             </li>
@@ -70,19 +71,19 @@ if (!isset($activeMenu))
         </li>
         <li class="nav-item">
           <a href="<?= base_url('bumil') ?>" class="nav-link <?= $activeMenu == 'bumil' ? 'active' : '' ?>">
-            <i class="nav-icon far fa-circle text-info"></i>
+            <!-- <i class="nav-icon far fa-circle text-info"></i> -->
             <p>Data Ibu Hamil</p>
           </a>
         </li>
         <li class="nav-item">
           <a href="<?= base_url('lansia') ?>" class="nav-link <?= $activeMenu == 'lansia' ? 'active' : '' ?>">
-            <i class="nav-icon far fa-circle text-info"></i>
+            <!-- <i class="nav-icon far fa-circle text-info"></i> -->
             <p>Data Lansia</p>
           </a>
         </li>
         <li class="nav-item">
           <a href="<?= base_url('kader') ?>" class="nav-link <?= $activeMenu == 'kader' ? 'active' : '' ?>">
-            <i class="nav-icon far fa-circle text-info"></i>
+            <!-- <i class="nav-icon far fa-circle text-info"></i> -->
             <p>Data Kader</p>
           </a>
         </li>
