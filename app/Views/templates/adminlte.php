@@ -1,10 +1,16 @@
   <!-- Content Wrapper. Contains page content -->
-  <?php 
-     $header['title']='Dashboard';
-     echo $this->include('components/header',$header);
-     echo $this->include('components/navbar');
-     echo $this->include('components/sidebar');
-  ?>
+  <?php
+    $header['title'] = 'Dashboard';
+    if (!isset($navbarOpt))
+        $navbarOpt = [];
+
+    if (!isset($sidebarOpt))
+        $sidebarOpt = [];
+        
+    echo $this->include('components/header', $header);
+    echo $this->include('components/navbar', $navbarOpt);
+    echo $this->include('components/sidebar', $sidebarOpt);
+    ?>
   <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <section class="content-header">
@@ -57,4 +63,4 @@
   <!-- /.content-wrapper -->
 
   <?php
-     echo $this->include('components/footer');
+    echo $this->include('components/footer');
