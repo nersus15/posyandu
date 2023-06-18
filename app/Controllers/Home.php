@@ -9,6 +9,11 @@ class Home extends BaseController
         return view('pages/login');
     }
     public function dashboard(){
-        return view('templates/adminlte');
+        $data = [
+            'sidebarOpt' => [
+                'activeMenu' => 'dashboard'
+            ]
+        ];
+        return view('templates/adminlte', $data);
     }
 }

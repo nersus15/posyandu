@@ -113,7 +113,13 @@ if (!function_exists('reverse')) {
 if (!function_exists('sessiondata')) {
     function sessiondata($index = 'login', $kolom = null, $default = null)
     {
-       
+        $session = session();
+        $data = $session->get($index);
+        if (is_null($data)) return $data;
+        if (is_array($data) && !empty($kolom))
+            return isset($data[$kolom]) ? $data[$kolom] : $default;
+
+        return $data;
     }
 }
 
@@ -234,7 +240,7 @@ if (!function_exists('is_login')) {
             $u  = $db->table('users')->select('*')
                 ->where('username', $userdata['username'])
                 ->get()->getResultArray();
-                
+
             if (count($u) > 1 || empty($u))
                 return false;
             else
@@ -246,14 +252,14 @@ if (!function_exists('is_login')) {
         if (!empty($callback) && is_callable($callback))
             return $callback($role, $user, $userdata);
 
-        if(!empty($userdata) && !isset($userdata['role'])){
-            if(!empty($user)){
+        if (!empty($userdata) && !isset($userdata['role'])) {
+            if (!empty($user)) {
                 return $userdata['username'] == $user;
-            }else{
+            } else {
                 return !empty($userdata);
             }
-        }elseif(empty($userdata)) return false;
-        
+        } elseif (empty($userdata)) return false;
+
         if (empty($role) && empty($user)) {
             return !empty($userdata);
         } elseif (!empty($userdata) && !empty($role) && empty($user)) {
@@ -261,7 +267,7 @@ if (!function_exists('is_login')) {
         } elseif (!empty($userdata) && empty($role) && !empty($user)) {
             return is_array($user) ? in_array($userdata['username'], $user) : $userdata['username'] == $user;
         } elseif (!empty($userdata) && !empty($role) && !empty($user)) {
-           return $userdata['username'] == $user && $userdata['role'] == $role;
+            return $userdata['username'] == $user && $userdata['role'] == $role;
         }
     }
 }
@@ -745,12 +751,13 @@ if (!function_exists('url_safe_base64_to_base64')) {
         return str_replace(array('-', '_'), array('+', '/'), $data);
     }
 }
-if(!function_exists('getExt')){
-    function getExt($filename, $extOnly = false){
+if (!function_exists('getExt')) {
+    function getExt($filename, $extOnly = false)
+    {
         $tmp = explode('.', $filename);
         $ext = end($tmp);
         $fname = str_replace('.' . $ext, '', $filename);
-        
+
         return $extOnly ? $ext : ['extension' => $ext, 'filename' => $fname];
     }
 }
