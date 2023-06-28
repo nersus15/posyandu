@@ -16,15 +16,12 @@ if (isset($dataFooter) && is_array($dataFooter) && !empty($dataFooter)) extract(
 <!-- ./wrapper -->
 
 <!-- jQuery -->
-<script src="<?= assets_url("vendor/adminlte/plugins/jquery/jquery.min") ?>.js"></script>
 <!-- Bootstrap 4 -->
 <script src="<?= assets_url("vendor/adminlte/plugins/bootstrap/js/bootstrap") ?>.bundle.min.js"></script>
 <!-- Plugin -->
 <?php if (isset($extra_js)) : ?>
     <?php foreach ($extra_js as $js) : ?>
-        <?php if ($js['pos'] == 'body:end') : ?>
-            <script src="<?= assets_url($js) ?>"></script>
-        <?php endif ?>
+        <script src="<?= assets_url($js) ?>"></script>
     <?php endforeach ?>
 <?php endif ?>
 <!-- AdminLTE App -->

@@ -15,6 +15,7 @@ if (isset($dataHeader) && is_array($dataHeader) && !empty($dataHeader)) extract(
     <link rel="stylesheet" href="<?= assets_url("vendor/adminlte/plugins/fontawesome-free/css/all.min.css") ?>">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= assets_url("vendor/adminlte/dist/css/adminlte.min.css") ?>">
+    <script src="<?= assets_url("vendor/adminlte/plugins/jquery/jquery.min") ?>.js"></script>
 
     <?php if (isset($extra_css)) :
         if (is_array($extra_css)) :
@@ -28,13 +29,19 @@ if (isset($dataHeader) && is_array($dataHeader) && !empty($dataHeader)) extract(
 
     <?php if (isset($extra_js)) : ?>
         <?php foreach ($extra_js as $js) : ?>
-            <?php if ($js['pos'] == 'head') : ?>
-                <script src="<?= assets_url($js) ?>"></script>
-            <?php endif ?>
+            <script src="<?= assets_url($js) ?>"></script>
         <?php endforeach ?>
     <?php endif ?>
 </head>
-
+<script>
+    var basepath = "<?= base_url() ?>";
+</script>
+<style>
+    .symbol-required::after{
+        content: '*';
+        color: #f70a51;
+    }
+</style>
 <body class="hold-transition sidebar-mini">
     <!-- Site wrapper -->
     <div class="wrapper">
