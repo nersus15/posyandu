@@ -13,7 +13,17 @@ class User extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'username',
+        'password',
+        'role',
+        'nama_lengkap',
+        'email',
+        'hp',
+        'alamat',
+        'photo',
+        'faskes',
+    ];
 
     // Validation
     protected $validationRules      = [];
@@ -32,15 +42,16 @@ class User extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    function login($username, $password){
+    function login($username, $password)
+    {
         $user = $this->find($username);
-        if(empty($user))
+        if (empty($user))
             return [false, 'Username <b>"' . $username . '"</b> Tidak ditemukan'];
-        
-        if(!password_verify($password, $user['password']))
+
+        if (!password_verify($password, $user['password']))
             return [false, 'Passowrd untuk User dengan Username <b>"' . $username . '"</b> Salah'];
-        
-        
+
+
         $session = session();
         $session->set('login', $user);
         return [true, ''];

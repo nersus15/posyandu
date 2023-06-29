@@ -30,6 +30,12 @@ class Bumil extends Migration
                 'null' => true,
                 'default' => null
             ],
+            'ttl_estimasi' => [
+                'type' => 'ENUM',
+                'constraint' => ['1', '0'],
+                'null' => false,
+                'default' => '0'
+            ],
             'domisili' => [
                 'type' => 'VARCHAR',
                 'constraint' => '92',
@@ -41,8 +47,8 @@ class Bumil extends Migration
                 'null' => false
             ],
             'pendidikan' => [
-                'type' => 'ENUM',
-                'constraint' => ['-', '0', '1', '2', '3', '4'], 
+                'type' => 'VARCHAR',
+                'constraint' => '8',
                 'default' => '-'
             ],
             'pekerjaan' => [
@@ -53,8 +59,12 @@ class Bumil extends Migration
             ],
             'agama' => [
                 'type' => 'ENUM', 
-                'constraint' => ['-', 'islam', 'kristen katolik', 'hindu', 'kristen protestan', 'buda'],
+                'constraint' => ['-', 'islam', 'kristen katolik', 'hindu', 'kristen protestan', 'buda', 'konghucu'],
                 'default' => '-'
+            ],
+            'registrar' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '46',
             ],
             'dibuat DATETIME NOT NULL DEFAULT current_timestamp'
         ]);

@@ -8,20 +8,30 @@ use Faker\Generator;
 class BumilModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'bumils';
+    protected $table            = 'bumil';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'id',
+        'nama',
+        'nama_suami',
+        'tanggal_lahir',
+        'domisili',
+        'alamat',
+        'pendidikan',
+        'pekerjaan',
+        'agama',
+        'registrar',
+        'ttl_estimasi'
+    ];
 
     // Dates
     protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $createdField  = 'dibuat';
 
     // Validation
     protected $validationRules      = [];
@@ -40,7 +50,8 @@ class BumilModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function fake(Generator &$faker){
+    public function fake(Generator &$faker)
+    {
         return [
             'nama' => $faker->name('female'),
             'suami' => $faker->name('male'),

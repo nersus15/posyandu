@@ -10,14 +10,17 @@ use Faker\Guesser\Name;
 
 class Bumil extends BaseController
 {
+    protected $bumilModel;
+    public function __construct() {
+        $this->bumilModel = new BumilModel();
+    }
     public function index()
     {
-        $dataBumil = [];
-        $bumilModel = new BumilModel();
-        $fabricator = new Fabricator($bumilModel, null, 'id_ID');
-
+        $dataBumil = reversemapping('bumil', $this->bumilModel->where('registrar', sessiondata('login', 'username'))->findAll(), [], [], true);
+        $fabricator = new Fabricator($this->bumilModel, null, 'id_ID');
         // $faker->format($formatters);
-        $dataBumil = $fabricator->make(100);
+        // $dataBumil += $fabricator->make(100);
+        $session = session();
         $data = [
             'dataHeader' => [
                 'title' => 'Data Ibu Hamil',
@@ -44,6 +47,7 @@ class Bumil extends BaseController
                     'view' => 'components/datatables',
                     'data' => [
                         'adaTambah' => true,
+                        'desc' => $session->getFlashdata('response'),
                         'dtid' => 'dt-bumil',
                         'header' => [
                             'No' => function ($data, $key) {
@@ -51,12 +55,21 @@ class Bumil extends BaseController
                             },
                             'Nama' => 'nama',
                             'Nama Suami' => 'suami',
-                            'Tanggal Lahir' => 'ttl',
+                            'Tanggal Lahir' => function($data){
+                                $badge = null;
+                                if($data['ttl_estimasi'] == 1){
+                                    $badge = '<span class="ml-2 badge bg-info badge-xs">Estimasi</span>';
+                                }
+                                return $data['ttl'] . $badge;
+                            },
                             'Alamat Domisili' => 'domisili',
                             'Alamat' => 'alamat',
                             'Pendidikan' => 'pendidikan',
                             'Pekerjaan' => 'pekerjaan',
-                            'Agama' => 'agama'
+                            'Agama' => 'agama',
+                            'Action' => function($data){
+                                return '<div style="margin:auto" class="row"><a href="' . base_url('bumil/update/' . $data['id']) .'" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('bumil/delete/' . $data['id']) .'" class="btb btn-xs btn-danger">Delete</a></div>';
+                            }
                         ],
                         'data' => $dataBumil
                     ]
@@ -67,12 +80,6 @@ class Bumil extends BaseController
     }
     public function add()
     {
-        $dataBumil = [];
-        $bumilModel = new BumilModel();
-        $fabricator = new Fabricator($bumilModel, null, 'id_ID');
-
-        // $faker->format($formatters);
-        $dataBumil = $fabricator->make(100);
         $data = [
             'dataHeader' => [
                 'title' => 'Tambah Data Ibu Hamil',
@@ -105,9 +112,46 @@ class Bumil extends BaseController
     {
         $post = $this->request->getPost();
         $message = null;
-        if($post['ingat_ttl'] == 0 && !is_numeric($post['umur']))
+        if($post['ingat_ttl'] == 0 && !is_numeric($post['umur'])){
             $message = "Umur harus angka";
-            
-        return redirect('bumil/add')->with('loginMessage', $message)->with('bumilData', $post);
+        }else{
+            $estimasi = '0';
+            if($post['ingat_ttl'] == 0){
+                $hariIni = time();
+                $umur = intval($post['umur']) * (60 * 60 * 24 * 365.25);
+                $ttl = waktu($hariIni - $umur, MYSQL_DATE_FORMAT);
+                $estimasi = '1';
+            }
+            $def = array(
+                'ttl' => $ttl
+            );
+            $data = fieldmapping('bumil', $post, $def);
+            $data['id'] = random(10);
+            $data['dibuat'] = waktu();
+            $data['ttl_estimasi'] = $estimasi;
+            $data['registrar'] = sessiondata('login', 'username');
+
+            try {
+                $this->bumilModel->insert($data);
+            } catch (\Throwable $th) {
+                $message = htmlspecialchars($th->getMessage());
+            }
+        }
+        return redirect(empty($message) ? 'bumil' : 'bumil/add')->with('response', $message)->with('bumilData', $post);
+    }
+
+    public function update(){
+
+    }
+
+    public function delete($id){
+        $data = $this->bumilModel->find($id);
+        $message = 'Berhasil menghapus data dengan id #' . $id;
+        if(empty($data))
+            $message = 'Data tidak ditemukan';
+        else
+            $this->bumilModel->delete($id);
+        
+        return redirect('bumil')->with('response', $message);
     }
 }
