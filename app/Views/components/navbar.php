@@ -1,5 +1,5 @@
 <?php 
-    if(isset($navbarOpt)) extract($navbarOpt);
+    if(isset($navbarOpt) && is_array($navbarOpt) && !empty($navbarOpt)) extract($navbarOpt);
 ?>
 
 <!-- Navbar -->

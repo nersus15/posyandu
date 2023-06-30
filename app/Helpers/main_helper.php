@@ -290,90 +290,90 @@ if (!function_exists('verify_token')) {
 }
 
 if (!function_exists('addResourceGroup')) {
-    function addResourceGroup($names, $removed = [], $type = null, $pos = null, $return = true)
-    {
+    // function addResourceGroup($names, $removed = [], $type = null, $pos = null, $return = true)
+    // {
 
-        $type = empty($type) ? 'semua' : $type;
-        $pos = empty($pos) ? 'head' : $pos;
+    //     $type = empty($type) ? 'semua' : $type;
+    //     $pos = empty($pos) ? 'head' : $pos;
 
-        /** @var CI_Controller $ci */
-        $ci = &get_instance();
-        $isLoaded = $ci->load->config('themes');
-        $resourceText = '';
-        $configitem = $ci->config->item('themes');
-        // Remove From Group
-        foreach ($names as $name) {
-            if (!empty($removed) && in_array($name, array_keys($removed)) && in_array($name, array_keys($configitem))) {
-                $currentItem = $removed[$name];
-                $Tcss = isset($configitem[$name]['css']) ? $configitem[$name]['css'] : [];
-                $Tjs = isset($configitem[$name]['js']) ? $configitem[$name]['js'] : [];
+    //     /** @var CI_Controller $ci */
+    //     $ci = &get_instance();
+    //     $isLoaded = $ci->load->config('themes');
+    //     $resourceText = '';
+    //     $configitem = $ci->config->item('themes');
+    //     // Remove From Group
+    //     foreach ($names as $name) {
+    //         if (!empty($removed) && in_array($name, array_keys($removed)) && in_array($name, array_keys($configitem))) {
+    //             $currentItem = $removed[$name];
+    //             $Tcss = isset($configitem[$name]['css']) ? $configitem[$name]['css'] : [];
+    //             $Tjs = isset($configitem[$name]['js']) ? $configitem[$name]['js'] : [];
 
-                $css = array_map(function ($arr) {
-                    return $arr['src'];
-                }, $Tcss);
+    //             $css = array_map(function ($arr) {
+    //                 return $arr['src'];
+    //             }, $Tcss);
 
-                $js = array_map(function ($arr) {
-                    return $arr['src'];
-                }, $Tjs);
+    //             $js = array_map(function ($arr) {
+    //                 return $arr['src'];
+    //             }, $Tjs);
 
-                $Fcss = array_diff($css, $currentItem);
-                $Fjs = array_diff($js, $currentItem);
+    //             $Fcss = array_diff($css, $currentItem);
+    //             $Fjs = array_diff($js, $currentItem);
 
-                // Re Assemble Sources
-                $configitem[$name]['css'] = array_filter($Tcss, function ($arr) use ($Fcss) {
-                    return in_array($arr['src'], $Fcss);
-                });
+    //             // Re Assemble Sources
+    //             $configitem[$name]['css'] = array_filter($Tcss, function ($arr) use ($Fcss) {
+    //                 return in_array($arr['src'], $Fcss);
+    //             });
 
-                $configitem[$name]['js'] = array_filter($Tjs, function ($arr) use ($Fjs) {
-                    return in_array($arr['src'], $Fjs);
-                });
-                log_message('INFO', "=================== REMOVE RESOURECE FROM RESOURCES GROUOP ==============" . print_r(['Tcss' => $Tcss, 'Tjs' => $Tjs, 'css' => $css, 'js' => $js, 'reoved' => $removed, 'Fcss' => $Fcss, 'Fjs' => $Fjs, 'reassemble' => $configitem[$name]], true));
-            }
-            if (!isset($configitem[$name]) || empty($configitem[$name])) return null;
-            if ($type == 'semua') {
-                if (!$isLoaded || empty($configitem[$name]))
-                    return null;
-                foreach ($configitem[$name] as $k => $v) {
-                    foreach ($v as $resource) {
-                        if (isset($resource['type']) && $resource['type'] == 'inline') {
-                            if ($k == 'js')
-                                $resourceText .= $resource['pos'] == $pos ? "<script>" . $resource['src'] . "</script>" : null;
-                            elseif ($k == 'css')
-                                $resourceText .= $resource['pos'] == $pos ?  "<style>" . $resource['src'] . "</style>" : null;
-                        } else {
-                            $resource['src'] = isset($resource['type']) && $resource['type'] == 'cdn' ? $resource['src'] : base_url('public/assets/' . $resource['src']);
-                            if ($k == 'js')
-                                $resourceText .= $resource['pos'] == $pos ? "<script src='{$resource['src']}'></script>" : null;
-                            elseif ($k == 'css')
-                                $resourceText .= $resource['pos'] == $pos ? "<link rel='stylesheet' href='{$resource['src']}'></link>" : null;
-                        }
-                    }
-                }
-            } else {
-                if (!$isLoaded || empty($configitem[$name][$type]))
-                    return null;
-                foreach ($configitem[$name][$type] as $k => $v) {
-                    if (isset($v['type']) && $v['type'] == 'cdn')
-                        $v['src'] = $v['src'];
-                    else
-                        $v['src'] = base_url('public/assets/' . $v['src']);
+    //             $configitem[$name]['js'] = array_filter($Tjs, function ($arr) use ($Fjs) {
+    //                 return in_array($arr['src'], $Fjs);
+    //             });
+    //             log_message('INFO', "=================== REMOVE RESOURECE FROM RESOURCES GROUOP ==============" . print_r(['Tcss' => $Tcss, 'Tjs' => $Tjs, 'css' => $css, 'js' => $js, 'reoved' => $removed, 'Fcss' => $Fcss, 'Fjs' => $Fjs, 'reassemble' => $configitem[$name]], true));
+    //         }
+    //         if (!isset($configitem[$name]) || empty($configitem[$name])) return null;
+    //         if ($type == 'semua') {
+    //             if (!$isLoaded || empty($configitem[$name]))
+    //                 return null;
+    //             foreach ($configitem[$name] as $k => $v) {
+    //                 foreach ($v as $resource) {
+    //                     if (isset($resource['type']) && $resource['type'] == 'inline') {
+    //                         if ($k == 'js')
+    //                             $resourceText .= $resource['pos'] == $pos ? "<script>" . $resource['src'] . "</script>" : null;
+    //                         elseif ($k == 'css')
+    //                             $resourceText .= $resource['pos'] == $pos ?  "<style>" . $resource['src'] . "</style>" : null;
+    //                     } else {
+    //                         $resource['src'] = isset($resource['type']) && $resource['type'] == 'cdn' ? $resource['src'] : base_url('public/assets/' . $resource['src']);
+    //                         if ($k == 'js')
+    //                             $resourceText .= $resource['pos'] == $pos ? "<script src='{$resource['src']}'></script>" : null;
+    //                         elseif ($k == 'css')
+    //                             $resourceText .= $resource['pos'] == $pos ? "<link rel='stylesheet' href='{$resource['src']}'></link>" : null;
+    //                     }
+    //                 }
+    //             }
+    //         } else {
+    //             if (!$isLoaded || empty($configitem[$name][$type]))
+    //                 return null;
+    //             foreach ($configitem[$name][$type] as $k => $v) {
+    //                 if (isset($v['type']) && $v['type'] == 'cdn')
+    //                     $v['src'] = $v['src'];
+    //                 else
+    //                     $v['src'] = base_url('public/assets/' . $v['src']);
 
-                    if ($type == 'js') {
-                        if ($v['pos'] == $pos)
-                            $resourceText .= "<script src='{$v['src']}'></script>";
-                    }
-                    if ($type == 'css') {
-                        if ($v['pos'] == $pos)
-                            $resourceText .= "<link rel='stylesheet' href='{$v['src']}'></link>";
-                    }
-                }
-            }
-        }
-        if ($return)
-            return $resourceText;
-        else
-            echo $resourceText;
-    }
+    //                 if ($type == 'js') {
+    //                     if ($v['pos'] == $pos)
+    //                         $resourceText .= "<script src='{$v['src']}'></script>";
+    //                 }
+    //                 if ($type == 'css') {
+    //                     if ($v['pos'] == $pos)
+    //                         $resourceText .= "<link rel='stylesheet' href='{$v['src']}'></link>";
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     if ($return)
+    //         return $resourceText;
+    //     else
+    //         echo $resourceText;
+    // }
 }
 
 
@@ -759,5 +759,90 @@ if (!function_exists('getExt')) {
         $fname = str_replace('.' . $ext, '', $filename);
 
         return $extOnly ? $ext : ['extension' => $ext, 'filename' => $fname];
+    }
+}
+if(!function_exists('c_isset')){
+    function c_isset($arr, $key){
+        $keys = array_keys(is_object($arr) ? (array) $arr : $arr);
+        return in_array($key, $keys);
+    }
+}
+
+if(!function_exists('fieldmapping')){
+    function fieldmapping($config, $input, $defaultValue = array(), $petaNilai = array()){
+        $configitem = config('Forms');
+        $adaDefault = count($defaultValue) > 0;
+        $adaPeta = count($petaNilai) > 0;
+        $field = array();
+        if(!file_exists(APPPATH . 'config/Forms.php') || empty($configitem->$config))
+            response(['message' => 'Config form ' . $config . ' Tidak ditemukan'], 404);
+        
+        foreach($configitem->$config as $k => $v){
+            if($adaDefault && c_isset($defaultValue, $k)){
+                if(c_isset($input, $k) && (is_null($input[$k]) || $input[$k] == ''))
+                    $field[$v] = $defaultValue[$k];
+                else
+                    $field[$v] = $input[$k];
+            }elseif((!$adaDefault || !c_isset($defaultValue, $k)) && c_isset($input, $k))
+                $field[$v] = $input[$k];
+        }
+        
+        
+        if($adaPeta){
+            foreach($petaNilai as $key => $f){
+                foreach($f as $k => $v){
+                    if($field[$key] == $k)
+                        $field[$key] = $v;
+                }
+            }
+        }
+        foreach($field as $k => $f){
+            if($f == '#unset') // nanti jika dia defaultnya unset dia dihapus dari arraya agar tidak update kolom itu
+                unset($field[$k]);
+        }
+        return $field;
+    }
+}
+
+if(!function_exists('reversemapping')){
+    function reversemapping($config, $input, $defaultValue = array(), $petaNilai = array(), $batch = false){
+        $configitem = config('Forms');
+        $adaDefault = count($defaultValue) > 0;
+        $adaPeta = count($petaNilai) > 0;
+        $field = array();
+        $input = (array) $input;
+        if(!file_exists(APPPATH . 'config/Forms.php') || empty($configitem->$config))
+            response(['message' => 'Config form ' . $config . ' Tidak ditemukan'], 404);
+        if($batch){
+            foreach($input as $k => $v){
+                $field[$k] = reversemapping($config, $v, $defaultValue, $petaNilai);
+            }
+            return $field;
+        }
+
+        foreach($configitem->$config as $k => $v){
+            if($adaDefault && c_isset($defaultValue, $v)){
+                if(c_isset($input, $v) && (is_null($input[$v]) || $input[$v] == ''))
+                    $field[$k] = $defaultValue[$v];
+                else
+                    $field[$k] = $input[$v];
+            }elseif((!$adaDefault || !c_isset($defaultValue, $v)) && c_isset($input, $v))
+                $field[$k] = $input[$v];
+        }
+        
+        
+        if($adaPeta){
+            foreach($petaNilai as $key => $f){
+                foreach($f as $k => $v){
+                    if($field[$key] == $k)
+                        $field[$key] = $v;
+                }
+            }
+        }
+        foreach($field as $k => $f){
+            if($f == '#unset') // nanti jika dia defaultnya unset dia dihapus dari arraya agar tidak update kolom itu
+                unset($field[$k]);
+        }
+        return $field;
     }
 }

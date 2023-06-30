@@ -10,6 +10,9 @@ class Home extends BaseController
     }
     public function dashboard(){
         $data = [
+            'dataHeader' => [
+                'title' => 'Dashboard'
+            ],
             'sidebarOpt' => [
                 'activeMenu' => 'dashboard'
             ]
