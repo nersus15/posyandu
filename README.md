@@ -8,4 +8,4 @@
 1. Setelah dependensi di install, selanjutnya buat database dengan masuk ke phpmyadmin (jika menggunakan XAMPP nyalakan apache dan mysql) untuk nama database itu bebas (rekomendasi posyandu agar tidak utak atik config)
 1. Setelah membuat database, selanjutnya buat table dengan menjalankan perinta ``` php spark migrate ```
 2. Selanjutnya ketikkan perintah ``` php spark db:seed UserSeeder``` untuk membuat akun default, untuk username dan password akun default, silahkan buka file ``` app\Database\Seeds\UserSeeder.php ```
-3. Setelah semua persiapan selesai, selanjutnya jalankan server untuk aplikasi webnya dengan perintah ``` php spark serve ```, maka server akan berjalan secara otomatis di port 8080, untuk membuka website kunjungi ``` https://localhost:8080 ```
+3. Setelah semua persiapan selesai, selanjutnya jalankan server untuk aplikasi webnya dengan perintah ``` php spark serve ```, maka server akan berjalan secara otomatis di port 8080, untuk membuka website kunjungi ``` http://localhost:8080 ```
