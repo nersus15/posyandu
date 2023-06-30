@@ -15,6 +15,7 @@ if (isset($dataHeader) && is_array($dataHeader) && !empty($dataHeader)) extract(
     <link rel="stylesheet" href="<?= assets_url("vendor/adminlte/plugins/fontawesome-free/css/all.min.css") ?>">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= assets_url("vendor/adminlte/dist/css/adminlte.min.css") ?>">
+    <script src="<?= assets_url("js/utils") ?>.js"></script>
     <script src="<?= assets_url("vendor/adminlte/plugins/jquery/jquery.min") ?>.js"></script>
 
     <?php if (isset($extra_css)) :

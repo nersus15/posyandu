@@ -2,7 +2,8 @@
 $session = session();
 $message = $session->getFlashdata('response');
 $data = $session->getFlashdata('bumilData');
-if(empty($data))
+if(!isset($mode)) $mode = 'baru';
+if(empty($data)){
     $data = [
         'nama' => null,
         'suami' => null,
@@ -15,7 +16,21 @@ if(empty($data))
         'pekerjaan' => null,
         'agama' => null,
     ];
+}
+if(isset($dataBumil) && !empty($dataBumil)){
+    $data = array_merge($data, $dataBumil);
+    if($data['ttl_estimasi'] == 1){
+        $data['ingat_ttl'] = 0;
+        $ttl = date_create($data['ttl']);
+        $sekarang = date_create();
+
+        $umur = date_diff($sekarang, $ttl);
+        $data['umur'] = $umur->y;
+        $data['ttl'] = null;
+    }
+}
 ?>
+
 <div class="container-fluid">
     <!-- SELECT2 EXAMPLE -->
     <div class="card card-default">
@@ -33,7 +48,7 @@ if(empty($data))
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <form action="<?= base_url('bumil/add') ?>" method="POST">
+            <form action="<?= $mode == 'baru' ? base_url('bumil/add') : base_url('bumil/set/' . $data['id']) ?>" method="POST">
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
@@ -60,7 +75,7 @@ if(empty($data))
 
                         <div class="form-group">
                             <label for="ttl">Tanggal lahir <span class="symbol-required"></span></label>
-                            <input type="text" value="<?= $data['ttl'] ?>" required name="ttl" id="ttl" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                            <input type="text" value="<?= $data['ttl'] ?>" required name="ttl" id="ttl" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="yyyy-mm-dd" data-mask>
                         </div>
                         <div style="display: none;" class="form-group">
                             <label for="umur">Umur <span class="symbol-required"></span></label>
@@ -131,7 +146,7 @@ if(empty($data))
 
         var defData = <?= json_encode($data) ?>;
 
-        $('#ttl').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+        $('#ttl').inputmask('yyyy-mm-dd', { 'placeholder': 'yyyy-mm-dd' })
         $("input[name='ingat_ttl']").change(function() {
             var ingat = $(this).attr('id');
             if (ingat == 'ingat') {

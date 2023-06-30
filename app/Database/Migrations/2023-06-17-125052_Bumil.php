@@ -62,6 +62,21 @@ class Bumil extends Migration
                 'constraint' => ['-', 'islam', 'kristen katolik', 'hindu', 'kristen protestan', 'buda', 'konghucu'],
                 'default' => '-'
             ],
+            'kartu_kesehatan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 46, 
+                'null' => true
+            ],
+            'golongan_darah' => [
+                'type' => 'ENUM',
+                'constraint' => ['-', 'A', 'B', 'O', 'AB'],
+                'default' => '-'
+            ],
+            'hp' => [
+                'type' => 'VARCHAR',
+                'constraint' => 15,
+                'null' => true
+            ],
             'registrar' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '46',

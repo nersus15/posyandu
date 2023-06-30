@@ -42,6 +42,7 @@
     $(document).ready(function() {
         var dtid = "<?= $dtid ?? $idContent ?>";
         var ada_tambah = <?= $adaTambah ?? 'false' ?>;
+        var buttons = <?= isset($buttons) && !empty($buttons) ? json_encode($buttons) : '[]' ?>;
         var options = {
             "responsive": true,
             "lengthChange": true,
@@ -56,6 +57,12 @@
                 }
             })
         }
+        buttons.forEach(button => {
+            options.buttons.push({
+                text: button.text,
+                action: button.action.parseFunction()
+            });
+        });
         $("#" + dtid).DataTable(options).buttons().container().appendTo('#' + dtid + '_wrapper .col-md-6:eq(0)');
     });
 </script>
