@@ -17,11 +17,29 @@ class PemeriksaanBumil extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 10
             ],
+            'faskes' => [
+                'type' => 'VARCHAR',
+                'constraint' => '92',
+                'default' => null,
+                'null' => true,
+            ],
             'tgl_periksa DATE NOT NULL DEFAULT current_timestamp',
             'dibuat DATE NOT NULL DEFAULT current_timestamp',
             'registrar' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '46',
+            ],
+            'posyandu' => [
+                'type' => 'VARCHAR',
+                'constraint' => '46',
+                'default' => null,
+                'null' => true,
+            ],
+            'dukun' => [
+                'type' => 'VARCHAR',
+                'constraint' => '46',
+                'default' => null,
+                'null' => true,
             ],
             'gravida' => [
                 'type' => 'INT',

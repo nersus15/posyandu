@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\BumilModel;
 use App\Models\KunjunganBumil;
+use App\Models\User;
+use App\Models\WilayahModel;
 use CodeIgniter\Test\Fabricator;
 use Faker\Generator;
 use Faker\Guesser\Name;
@@ -19,10 +21,10 @@ class Bumil extends BaseController
     public function index()
     {
         $dataBumil = reversemapping('bumil', $this->bumilModel->where('registrar', sessiondata('login', 'username'))->findAll(), [], [], true);
-        $fabricator = new Fabricator($this->bumilModel, null, 'id_ID');
-        // $faker->format($formatters);
-        // $dataBumil += $fabricator->make(100);
         $session = session();
+        $wilayahModel = new WilayahModel();
+        $wilayah = $wilayahModel->findAll();
+        $wilayah = array_combine(array_column($wilayah, 'id'), array_column($wilayah, 'nama'));
         $data = [
             'dataHeader' => [
                 'title' => 'Data Ibu Hamil',
@@ -65,7 +67,11 @@ class Bumil extends BaseController
                                 return $data['ttl'] . $badge;
                             },
                             'Alamat Domisili' => 'domisili',
-                            'Alamat' => 'alamat',
+                            'Alamat' => function($rec) use($wilayah){
+                                $desa = $wilayah[$rec['alamat']];
+                                $kecamatan = $wilayah[substr($rec['alamat'], 0, 8) . '.0000'];
+                                return 'Desa ' . $desa. ', Kec. ' . $kecamatan;
+                            },
                             'Pendidikan' => 'pendidikan',
                             'Pekerjaan' => 'pekerjaan',
                             'Agama' => 'agama',
@@ -122,7 +128,7 @@ class Bumil extends BaseController
                         'buttons' => [
                             [
                                 'text' => 'Periksa',
-                                'action' => 'function( e, dt, node, config ){location.href = basepath + "bumil/periksa/' . $id . '";}'
+                                'action' => 'function( e, dt, node, config ){location.href = basepath + "kunjungan/bumil/periksa/' . $id . '";}'
                             ]
                         ],
                         'desc' => null,
@@ -130,7 +136,22 @@ class Bumil extends BaseController
                         'header' => [
                             'Tanggal' => 'dibuat',
                             'Obstetrik' => function ($rec) {
-                                return 'G' . $rec['gravida'] . ' P' . $rec['paritas'] . ' A' . $rec['abortus'] . ' Hidup ' . $rec['hidup'];
+                                return 'Gravida: ' . $rec['gravida'] . '<br> Partus: ' . $rec['paritas'] . ' <br>Abortus: ' . $rec['abortus'] . ' <br>Hidup: ' . $rec['hidup'];
+                            },
+                            'HPHT' => 'hpht',
+                            'Taksiran <br> Persalinan' => 'hpl',
+                            'Persalinan <br> Sebelumnya' => 'persalinan_sebelumnya',
+                            'BB' => function($rec){
+                                return !empty($rec['bb']) ? $rec['bb'] . ' Kg' : '';
+                            },
+                            'TB' => function($rec) {
+                                return !empty($rec['tb']) ? $rec['tb'] . ' cm' : '';
+                            },
+                            'Buku KIA' => function($rec){
+                                return $rec['buku_kia'] == '1' ? 'Memiliki' : 'Tidak Memiliki';
+                            },
+                            'Actions' => function($rec){
+                                return '<div style="margin:auto" class="row"><a href="' . base_url('kunjungan/bumil/detail/' . $rec['id']) . '" class="btb btn-xs btn-info">Detail</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/update/' . $rec['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/delete/' . $rec['id']) . '" class="btb btn-xs btn-danger">Delete</a></div>';
                             }
                         ],
                         'data' => $dataBumil['kunjungan']
@@ -220,7 +241,7 @@ class Bumil extends BaseController
                 $message = htmlspecialchars($th->getMessage());
             }
         }
-        return redirect(empty($message) ? 'bumil' : ('bumil/update/' . $id))->with('response', $message)->with('bumilData', $post);
+        return redirect()->to(base_url(empty($message) ? 'bumil' : ('bumil/update/' . $id)))->with('response', $message)->with('bumilData', $post);
     }
 
     private function form($id = null)
@@ -232,7 +253,24 @@ class Bumil extends BaseController
                 return view('errors/html/error_404', ['code' => '404', 'message' => "Data dengan ID $id tidak ditemukan"]);
             $dataBumil = reversemapping('bumil', $dataBumil);
         }
+        $wilayahModel = new WilayahModel();
+        $tmp = $wilayahModel->findAll();
+        $wilayah = [];
+        $kecamatan = array_filter($tmp, function($arr){return $arr['level'] == 3;});
+        $kecamatan = array_combine(array_column($kecamatan, 'id'), array_column($kecamatan, 'nama'));
+        foreach($tmp as $w){
+            if($w['level'] == 4){
+                $wilayah[$w['id']] = array(
+                    'id' => $w['id'],
+                    'nama' =>'Desa ' . $w['nama']
+                );
+            }
+        }
 
+        foreach($wilayah as $k => $w){
+            $kode = substr($w['id'], 0, 8);
+            $wilayah[$k]['nama'] .= ' - Kecamatan ' . $kecamatan[$kode . '.0000'];
+        }
         $data = [
             'dataHeader' => [
                 'title' => (empty($id) ? 'Tambah' : 'Update') . ' Data Ibu Hamil',
@@ -240,12 +278,15 @@ class Bumil extends BaseController
                     'vendor/adminlte/plugins/moment/moment.min.js',
                     "vendor/adminlte/plugins/daterangepicker/daterangepicker.js",
                     "vendor/adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js",
-                    'vendor/adminlte/plugins/inputmask/jquery.inputmask.min.js'
+                    'vendor/adminlte/plugins/inputmask/jquery.inputmask.min.js',
+                    'vendor/adminlte/plugins/select2/js/select2.full.min.js'
 
                 ],
                 'extra_css' => [
                     'vendor/adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
-                    'vendor/adminlte/plugins/daterangepicker/daterangepicker.css'
+                    'vendor/adminlte/plugins/daterangepicker/daterangepicker.css',
+                    'vendor/adminlte/plugins/select2/css/select2.min.css',
+                    'vendor/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'
                 ]
             ],
             'sidebarOpt' => [
@@ -254,28 +295,31 @@ class Bumil extends BaseController
             'contents' => [
                 'bumil' => [
                     'view' => 'pages/tambah_bumil',
-                    'data' => ['dataBumil' => $dataBumil, 'mode' => empty($id) ? 'baru' : 'edit']
+                    'data' => ['dataBumil' => $dataBumil, 'wil'=> $wilayah, 'mode' => empty($id) ? 'baru' : 'edit']
                 ]
             ]
         ];
         return view('templates/adminlte', $data);
     }
 
-    function periksa($id = null)
+    function periksa($ibu = null)
     {
-        $bumil = $this->bumilModel->find($id);
+        $bumil = $this->bumilModel->find($ibu);
         if (empty($bumil))
-            return view('errors/html/error_404', ['code' => '404', 'message' => "Data dengan ID $id tidak ditemukan"]);
-        return $this->formPeriksa($id);
+            return view('errors/html/error_404', ['code' => '404', 'message' => "Data dengan ID $ibu tidak ditemukan"]);
+        return $this->formPeriksa($ibu);
     }
     function post_periksa()
     {
         $kunjunganBumil = new KunjunganBumil();
         $post = $this->request->getPost();
         $def = [
-            'tgl_periksa' => [null => waktu(null, MYSQL_DATE_FORMAT)]
+            'tgl_periksa' => [null => waktu(null, MYSQL_DATE_FORMAT)],
+            'persalinan_sebemulnya' => '#unset',
+
         ];
         $peta = [];
+        $message = null;
         $data = fieldmapping('periksa_bumil', $post, $def, $peta);
         $data['id'] = random(8);
         $data['dibuat'] = waktu();
@@ -287,16 +331,53 @@ class Bumil extends BaseController
         } catch (\Throwable $th) {
             $message = htmlspecialchars($th->getMessage());
         }
-        return redirect((empty($message) ? 'bumil/kunjungan/' : 'bumil/periksa/') . $post['ibu'] )->with('response', $message)->with('bumilData', $post);
+        return redirect()->to(base_url((empty($message) ? 'bumil/kunjungan/' : 'bumil/periksa/') . $post['ibu']))->with('response', $message)->with('dataKunjungan', $post);
     }
     function set_periksa($id = null)
     {
     }
     function update_periksa($id = null)
     {
+        return $this->formPeriksa(null, $id);
     }
     function delete_periksa($id = null)
     {
+    }
+
+    function detail_periksa($id = null){
+        $kunjunganBumil = new KunjunganBumil();
+        $userModel = new User();
+        $wilayahModel = new WilayahModel();
+        $dataKunjungan = $kunjunganBumil->find($id);
+        if(empty($dataKunjungan))
+            return view('errors/html/error_404', ['code' => '404', 'message' => "Data Pemeriksaan dengan ID $id tidak ditemukan"]);
+
+        $dataBumil = $this->bumilModel->find($dataKunjungan['ibu']);
+        $diff = date_diff(date_create($dataBumil['tanggal_lahir']), date_create(waktu(null, MYSQL_DATE_FORMAT)));
+
+        $dataBumil['kecamatan'] = $wilayahModel->find(substr($dataBumil['alamat'], 0, 8) . '.0000');
+        $dataBumil['desa'] = $wilayahModel->find($dataBumil['alamat']);
+        $dataBumil['kunjungan'] = $dataKunjungan;
+        $dataBumil['umur'] = $diff->y;
+        $dataBumil['kunjungan']['petugas'] = $userModel->find($dataBumil['kunjungan']['registrar']);
+        $data = [
+            'dataHeader' => [
+                'title' => 'Detail Pemeriksaan Ibu ' . $dataBumil['nama'] . ' tanggal ' . $dataBumil['kunjungan']['tgl_periksa'],
+                'extra_js' => [
+                ]
+            ],
+            'sidebarOpt' => [
+                'activeMenu' => 'bumil'
+            ],
+            'contents' => [
+                'bumil' => [
+                    'view' => 'pages/detail/kunjungan_ibu',
+                    'data' => $dataBumil
+                ]
+            ]
+        ];
+        return view('templates/adminlte', $data);
+
     }
 
     private function formPeriksa($ibu = null, $id = null)

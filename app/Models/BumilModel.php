@@ -25,7 +25,12 @@ class BumilModel extends Model
         'pekerjaan',
         'agama',
         'registrar',
-        'ttl_estimasi'
+        'ttl_estimasi',
+        'golongan_darah',
+        'hp',
+        'kartu_kesehatan',
+        'nomor',
+        'rt'
     ];
 
     // Dates

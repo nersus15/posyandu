@@ -2,8 +2,8 @@
 $session = session();
 $message = $session->getFlashdata('response');
 $data = $session->getFlashdata('dataKunjungan');
-if(!isset($mode)) $mode = 'baru';
-if(empty($data)){
+if (!isset($mode)) $mode = 'baru';
+if (empty($data)) {
     $data = [
         'tgl' =>  waktu(null, MYSQL_DATE_FORMAT),
         'gravida' =>  1,
@@ -27,9 +27,11 @@ if(empty($data)){
         'kunjungan' =>  null,
         'kondisi_rumah' =>  null,
         'persediaan' =>  null,
+        'poyandu' =>  null,
+        'dukun' => null
     ];
 }
-if(isset($dataKunjungan) && !empty($dataKunjungan)){
+if (isset($dataKunjungan) && !empty($dataKunjungan)) {
     $data = array_merge($data, $dataKunjungan);
 }
 ?>
@@ -51,9 +53,19 @@ if(isset($dataKunjungan) && !empty($dataKunjungan)){
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <form action="<?= $mode == 'baru' ? base_url('bumil/periksa/save') : base_url('bumil/periksa/set/' . $data['id']) ?>" method="POST">
+            <form action="<?= $mode == 'baru' ? base_url('kunjungan/bumil/save') : base_url('kunjungan/bumil/set/' . $data['id']) ?>" method="POST">
                 <input type="hidden" name="ibu" value="<?= $ibu ?>">
                 <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="">Posyandu</label>
+                            <input type="text" name="poyandu" value="<?= $data['poyandu'] ?>" id="poyandu" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Dukun</label>
+                            <input type="text" name="dukun" value="<?= $data['dukun'] ?>" id="dukun" class="form-control">
+                        </div>
+                    </div>
                     <div class="col-sm-12 col-md-6">
                         <h4 class="col-12">Riwayat Obstetrik</h4>
                         <div class="form-group">
@@ -102,8 +114,8 @@ if(isset($dataKunjungan) && !empty($dataKunjungan)){
                         <div class="form-group">
                             <label for="bb">Buku KIA</label>
                             <select name="buku_kia" id="buku-kia" class="form-control">
-                                <option value="1" <?= $data['buku_kia'] == 1 ? 'selected' : '' ?> >Memiliki</option>
-                                <option value="0" <?= $data['buku_kia'] == 0 ? 'selected' : '' ?> >Tidak Memiliki</option>
+                                <option value="1" <?= $data['buku_kia'] == 1 ? 'selected' : '' ?>>Memiliki</option>
+                                <option value="0" <?= $data['buku_kia'] == 0 ? 'selected' : '' ?>>Tidak Memiliki</option>
                             </select>
                         </div>
                     </div>
@@ -124,55 +136,55 @@ if(isset($dataKunjungan) && !empty($dataKunjungan)){
                         <div class="form-group">
                             <label for="penolong">Rencana penolong</label>
                             <select name="penolong" id="penolong" class="form-control">
-                                <option value="1" <?= $data['penolong'] == '1' ? 'selected' : ''?>>Keluarga</option>
-                                <option value="2" <?= $data['penolong'] == '2' ? 'selected' : ''?>>Dukun</option>
-                                <option value="3" <?= $data['penolong'] == '3' ? 'selected' : ''?>>Bidan</option>
-                                <option value="4" <?= $data['penolong'] == '4' ? 'selected' : ''?>>dr. Umum</option>
-                                <option value="5" <?= $data['penolong'] == '5' ? 'selected' : ''?>>dr. Spesialis</option>
-                                <option value="6" <?= $data['penolong'] == '6' ? 'selected' : ''?>>Lain lain</option>
-                                <option value="7" <?= $data['penolong'] == '7' ? 'selected' : ''?>>Tidak ada</option>
+                                <option value="1" <?= $data['penolong'] == '1' ? 'selected' : '' ?>>Keluarga</option>
+                                <option value="2" <?= $data['penolong'] == '2' ? 'selected' : '' ?>>Dukun</option>
+                                <option value="3" <?= $data['penolong'] == '3' ? 'selected' : '' ?>>Bidan</option>
+                                <option value="4" <?= $data['penolong'] == '4' ? 'selected' : '' ?>>dr. Umum</option>
+                                <option value="5" <?= $data['penolong'] == '5' ? 'selected' : '' ?>>dr. Spesialis</option>
+                                <option value="6" <?= $data['penolong'] == '6' ? 'selected' : '' ?>>Lain lain</option>
+                                <option value="7" <?= $data['penolong'] == '7' ? 'selected' : '' ?>>Tidak ada</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="tempat">Tempat</label>
                             <select name="tempat" id="tempat" class="form-control">
-                                <option value="1" <?= $data['tempat'] == '1' ? 'selected' : ''?>>Rumah</option>
-                                <option value="2" <?= $data['tempat'] == '2' ? 'selected' : ''?>>Poskesdes/Polindes</option>
-                                <option value="3" <?= $data['tempat'] == '3' ? 'selected' : ''?>>Pustu</option>
-                                <option value="4" <?= $data['tempat'] == '4' ? 'selected' : ''?>>Puskesmas</option>
-                                <option value="5" <?= $data['tempat'] == '5' ? 'selected' : ''?>>RB</option>
-                                <option value="6" <?= $data['tempat'] == '6' ? 'selected' : ''?>>RSIA</option>
-                                <option value="7" <?= $data['tempat'] == '7' ? 'selected' : ''?>>RS</option>
-                                <option value="8" <?= $data['tempat'] == '8' ? 'selected' : ''?>>RS Odha</option>
+                                <option value="1" <?= $data['tempat'] == '1' ? 'selected' : '' ?>>Rumah</option>
+                                <option value="2" <?= $data['tempat'] == '2' ? 'selected' : '' ?>>Poskesdes/Polindes</option>
+                                <option value="3" <?= $data['tempat'] == '3' ? 'selected' : '' ?>>Pustu</option>
+                                <option value="4" <?= $data['tempat'] == '4' ? 'selected' : '' ?>>Puskesmas</option>
+                                <option value="5" <?= $data['tempat'] == '5' ? 'selected' : '' ?>>RB</option>
+                                <option value="6" <?= $data['tempat'] == '6' ? 'selected' : '' ?>>RSIA</option>
+                                <option value="7" <?= $data['tempat'] == '7' ? 'selected' : '' ?>>RS</option>
+                                <option value="8" <?= $data['tempat'] == '8' ? 'selected' : '' ?>>RS Odha</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="pendamping">Pendamping</label>
                             <select name="pendamping" id="pendamping" class="form-control">
-                                <option value="1" <?= $data['pendamping'] == '1' ? 'selected' : ''?>>Suami</option>
-                                <option value="2" <?= $data['pendamping'] == '2' ? 'selected' : ''?>>Keluarga</option>
-                                <option value="3" <?= $data['pendamping'] == '3' ? 'selected' : ''?>>Teman</option>
-                                <option value="4" <?= $data['pendamping'] == '4' ? 'selected' : ''?>>Tetangga</option>
-                                <option value="5" <?= $data['pendamping'] == '5' ? 'selected' : ''?>>Lain lain (Dukun)</option>
-                                <option value="6" <?= $data['pendamping'] == '6' ? 'selected' : ''?>>Tidak ada</option>
+                                <option value="1" <?= $data['pendamping'] == '1' ? 'selected' : '' ?>>Suami</option>
+                                <option value="2" <?= $data['pendamping'] == '2' ? 'selected' : '' ?>>Keluarga</option>
+                                <option value="3" <?= $data['pendamping'] == '3' ? 'selected' : '' ?>>Teman</option>
+                                <option value="4" <?= $data['pendamping'] == '4' ? 'selected' : '' ?>>Tetangga</option>
+                                <option value="5" <?= $data['pendamping'] == '5' ? 'selected' : '' ?>>Lain lain (Dukun)</option>
+                                <option value="6" <?= $data['pendamping'] == '6' ? 'selected' : '' ?>>Tidak ada</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="transport">Transportasi</label>
                             <select name="transport" id="transport" class="form-control">
-                                <option value="1" <?= $data['transport'] == '1' ? 'selected' : ''?>>Sepeda motor</option>
-                                <option value="2" <?= $data['transport'] == '2' ? 'selected' : ''?>>Mobil</option>
-                                <option value="3" <?= $data['transport'] == '3' ? 'selected' : ''?>>Lain lain (Cidomo, becak, benhur, dll)</option>
+                                <option value="1" <?= $data['transport'] == '1' ? 'selected' : '' ?>>Sepeda motor</option>
+                                <option value="2" <?= $data['transport'] == '2' ? 'selected' : '' ?>>Mobil</option>
+                                <option value="3" <?= $data['transport'] == '3' ? 'selected' : '' ?>>Lain lain (Cidomo, becak, benhur, dll)</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="donor">Pendonor</label>
                             <select name="donor" id="donor" class="form-control">
-                                <option value="1" <?= $data['donor'] == '1' ? 'selected' : ''?>>Suami</option>
-                                <option value="2" <?= $data['donor'] == '2' ? 'selected' : ''?>>Keluarga</option>
-                                <option value="3" <?= $data['donor'] == '3' ? 'selected' : ''?>>Teman</option>
-                                <option value="4" <?= $data['donor'] == '4' ? 'selected' : ''?>>Lain lain(Kader, Masyarakat, Polri, Satpam)</option>
-                                <option value="5" <?= $data['donor'] == '5' ? 'selected' : ''?>>Tidak ada</option>
+                                <option value="1" <?= $data['donor'] == '1' ? 'selected' : '' ?>>Suami</option>
+                                <option value="2" <?= $data['donor'] == '2' ? 'selected' : '' ?>>Keluarga</option>
+                                <option value="3" <?= $data['donor'] == '3' ? 'selected' : '' ?>>Teman</option>
+                                <option value="4" <?= $data['donor'] == '4' ? 'selected' : '' ?>>Lain lain(Kader, Masyarakat, Polri, Satpam)</option>
+                                <option value="5" <?= $data['donor'] == '5' ? 'selected' : '' ?>>Tidak ada</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -206,12 +218,14 @@ if(isset($dataKunjungan) && !empty($dataKunjungan)){
 <script>
     $(document).ready(function() {
         var response = '<?= $message ?>';
-        if(response == null || response == '')
+        if (response == null || response == '')
             $("#umur").focus();
 
         var defData = <?= json_encode($data) ?>;
 
-        $('.datemask').inputmask('yyyy-mm-dd', { 'placeholder': 'yyyy-mm-dd' })
+        $('.datemask').inputmask('yyyy-mm-dd', {
+            'placeholder': 'yyyy-mm-dd'
+        })
         $("input[name='ingat_ttl']").change(function() {
             var ingat = $(this).attr('id');
             if (ingat == 'ingat') {
@@ -226,10 +240,10 @@ if(isset($dataKunjungan) && !empty($dataKunjungan)){
             }
         });
 
-        if(defData['pendidikan'])
+        if (defData['pendidikan'])
             $("#pendidikan option[value='" + defData['pendidikan'] + "']").prop('selected', true).parent().trigger('change');
 
-        if(defData['agama'])
+        if (defData['agama'])
             $("#agama option[value='" + defData['agama'] + "']").prop('selected', true).parent().trigger('change');
 
         $("input[name='ingat_ttl']:checked").trigger('change');

@@ -4,43 +4,19 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class KunjunganBumil extends Model
+class WilayahModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'kunjungan_bumil';
+    protected $table            = 'wilayah';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'id',
-        'tgl_periksa',
-        'ibu',
-        'registrar',
-        'gravida',
-        'paritas',
-        'abortus',
-        'hidup',
-        'hpht',
-        'hpl',
-        'persalinan_sebemulnya',
-        'bb',
-        'tb',
-        'buku_kia',
-        'riwayat_komplikasi',
-        'penyakit',
-        'persalinan_tgl',
-        'persalinan_penolong',
-        'persalinan_pendamping',
-        'persalinan_tempat',
-        'persalinan_transportasi',
-        'persalinan_pendonor',
-        'persalinan_kunjungan_rumah',
-        'persalinan_kondisi_rumah',
-        'persalinan_persedian',
-        'posyandu', 
-        'dukun'
+        'id', 
+        'level',
+        'nama'
     ];
 
     // Dates
