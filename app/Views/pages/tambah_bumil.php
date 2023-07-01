@@ -2,8 +2,8 @@
 $session = session();
 $message = $session->getFlashdata('response');
 $data = $session->getFlashdata('bumilData');
-if(!isset($mode)) $mode = 'baru';
-if(empty($data)){
+if (!isset($mode)) $mode = 'baru';
+if (empty($data)) {
     $data = [
         'nama' => null,
         'suami' => null,
@@ -15,11 +15,16 @@ if(empty($data)){
         'pendidikan' => 'tidak sekolah',
         'pekerjaan' => null,
         'agama' => null,
+        'darah' => '-',
+        'hp' => null,
+        'kartu' => null,
+        'no' => null,
+        'rt' => null
     ];
 }
-if(isset($dataBumil) && !empty($dataBumil)){
+if (isset($dataBumil) && !empty($dataBumil)) {
     $data = array_merge($data, $dataBumil);
-    if($data['ttl_estimasi'] == 1){
+    if ($data['ttl_estimasi'] == 1) {
         $data['ingat_ttl'] = 0;
         $ttl = date_create($data['ttl']);
         $sekarang = date_create();
@@ -51,6 +56,10 @@ if(isset($dataBumil) && !empty($dataBumil)){
             <form action="<?= $mode == 'baru' ? base_url('bumil/add') : base_url('bumil/set/' . $data['id']) ?>" method="POST">
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="no">Nomor Ibu <span class="symbol-required"></span></label>
+                            <input value="<?= $data['no'] ?>" type="text" required maxlength="10" minlength="9" name="no" id="no" class="form-control">
+                        </div>
                         <div class="form-group">
                             <label for="nama">Nama Ibu <span class="symbol-required"></span></label>
                             <input value="<?= $data['nama'] ?>" type="text" required name="nama" id="nama" class="form-control">
@@ -87,12 +96,21 @@ if(isset($dataBumil) && !empty($dataBumil)){
                         </div>
                         <div class="form-group">
                             <label for="alamat">Alamat <span class="symbol-required"></span></label>
-                            <input type="text" value="<?= $data['alamat'] ?>" required name="alamat" id="alamat" class="form-control">
+                            <select required name="alamat" id="alamat" class="form-control">
+                                <option value="">Pilih</option>
+                                <?php foreach ($wil as $w) : ?>
+                                    <option <?= $data['alamat'] == $w['id'] ? 'selected' : '' ?> value="<?= $w['id'] ?>"><?= $w['nama'] ?></option>
+                                <?php endforeach ?>
+                            </select>
                         </div>
                     </div>
+                    <div class="form-group">
+                            <label for="domisili">RT/RW</label>
+                            <input type="text" value="<?= $data['rt'] ?>" required name="rt" id="rt" class="form-control">
+                        </div>
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label for="nama">Pendidikan</label>
+                            <label for="pendidikan">Pendidikan</label>
                             <select name="pendidikan" id="pendidikan" class="form-control">
                                 <option value="-">Tidak sekolah</option>
                                 <option value="TK">PAUD</option>
@@ -112,7 +130,7 @@ if(isset($dataBumil) && !empty($dataBumil)){
                             <input value="<?= $data['pekerjaan'] ?>" type="text" name="pekerjaan" id="pekerjaan" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="nama">Agama</label>
+                            <label for="agama">Agama</label>
                             <select name="agama" id="agama" class="form-control">
                                 <option value="islam">Islam</option>
                                 <option value="hindu">Hindu</option>
@@ -121,6 +139,29 @@ if(isset($dataBumil) && !empty($dataBumil)){
                                 <option value="kristen katolik">Kristen Katolik</option>
                                 <option value="konghucu">Konghucu</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="darah">Golongan darah</label>
+                            <select name="darah" id="darah" class="form-control">
+                                <option value="-" <?= $data['darah'] == '-' ? 'selected' : '' ?>>Tidak tahu</option>
+                                <option value="A" <?= $data['darah'] == 'A' ? 'selected' : '' ?>>A</option>
+                                <option value="B" <?= $data['darah'] == 'B' ? 'selected' : '' ?>>B</option>
+                                <option value="O" <?= $data['darah'] == 'O' ? 'selected' : '' ?>>O</option>
+                                <option value="AB" <?= $data['darah'] == 'AB' ? 'selected' : '' ?>>AB</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="kartu">Kartu kesehatan</label>
+                            <select name="kartu" id="kartu" class="form-control">
+                                <option value="" <?= empty($data['kartu'])  ? 'selected' : '' ?>>Tidak ada</option>
+                                <option value="jamkesmas" <?= $data['kartu'] == 'jamkesmas' ? 'selected' : '' ?>>Jamkesmas</option>
+                                <option value="jamsostek" <?= $data['kartu'] == 'jamsostek' ? 'selected' : '' ?>>Jamsostek</option>
+                                <option value="jamkesda" <?= $data['kartu'] == 'jamkesda' ? 'selected' : '' ?>>Jamkesda Askes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hp">Nomor Hp</label>
+                            <input type="text" name="hp" id="hp" class="form-control" maxlength="13" value="<?= $data['hp'] ?>">
                         </div>
                     </div>
                 </div>
@@ -141,12 +182,14 @@ if(isset($dataBumil) && !empty($dataBumil)){
 <script>
     $(document).ready(function() {
         var response = '<?= $message ?>';
-        if(response == null || response == '')
+        if (response == null || response == '')
             $("#umur").focus();
 
         var defData = <?= json_encode($data) ?>;
 
-        $('#ttl').inputmask('yyyy-mm-dd', { 'placeholder': 'yyyy-mm-dd' })
+        $('#ttl').inputmask('yyyy-mm-dd', {
+            'placeholder': 'yyyy-mm-dd'
+        })
         $("input[name='ingat_ttl']").change(function() {
             var ingat = $(this).attr('id');
             if (ingat == 'ingat') {
@@ -160,11 +203,12 @@ if(isset($dataBumil) && !empty($dataBumil)){
 
             }
         });
+        $("#alamat").select2();
 
-        if(defData['pendidikan'])
+        if (defData['pendidikan'])
             $("#pendidikan option[value='" + defData['pendidikan'] + "']").prop('selected', true).parent().trigger('change');
 
-        if(defData['agama'])
+        if (defData['agama'])
             $("#agama option[value='" + defData['agama'] + "']").prop('selected', true).parent().trigger('change');
 
         $("input[name='ingat_ttl']:checked").trigger('change');

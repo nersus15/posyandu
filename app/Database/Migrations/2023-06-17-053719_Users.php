@@ -56,7 +56,7 @@ class Users extends Migration
             ],
             'faskes' => [
                 'type' => 'VARCHAR',
-                'constraint' => '15',
+                'constraint' => '92',
                 'default' => null,
                 'null' => true,
             ],

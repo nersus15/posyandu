@@ -1,3 +1,9 @@
+<style>
+    th{
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -46,7 +52,7 @@
         var options = {
             "responsive": true,
             "lengthChange": true,
-            "autoWidth": false,
+            "autoWidth": true,
             "buttons": ["copy", "csv", "excel", "pdf", "print"]
         };
         if(ada_tambah){

@@ -17,7 +17,9 @@ class Forms extends BaseConfig{
         'id' => 'id',
         'darah' => 'golongan_darah',
         'hp' => 'hp',
-        'kartu' => 'kartu_kesehatan'
+        'kartu' => 'kartu_kesehatan',
+        'no' => 'nomor',
+        'rt' => 'rt'
     ];
 
     public array $periksa_bumil = [
@@ -27,7 +29,7 @@ class Forms extends BaseConfig{
         'abortus' => 'paritas',
         'hidup' => 'hidup',
         'hpht' => 'hpht',
-        'hpl' => 'hpht',
+        'hpl' => 'hpl',
         'sebelum' => 'persalinan_sebemulnya',
         'bb' => 'bb',
         'tb' => 'tb',
@@ -43,5 +45,7 @@ class Forms extends BaseConfig{
         'kunjungan' => 'persalinan_kunjungan_rumah',
         'kondisi_rumah' => 'persalinan_kondisi_rumah',
         'persediaan' => 'persalinan_persedian',
+        'posyandu' => 'posyandu',
+        'dukun' => 'dukun'
     ];
 }
