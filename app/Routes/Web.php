@@ -33,7 +33,13 @@ $routes->post('/kunjungan/bumil/set/(:any)', 'Bumil::set_periksa/$1', ['filter' 
 // Data Lansia
 $routes->get('/lansia', 'Lansia::index', ['filter' => 'MustLogin']);
 $routes->get('/lansia/add', 'Lansia::add', ['filter' => 'MustLogin']);
-$routes->post('/lansia/add', 'Lansia::post_add', ['filter' => 'MustLogin']);
+$routes->post('/lansia/save', 'Lansia::save', ['filter' => 'MustLogin']);
 $routes->post('/lansia/set/(:any)', 'Lansia::set/$1', ['filter' => 'MustLogin']);
 $routes->get('/lansia/delete/(:any)', 'Lansia::delete/$1', ['filter' => 'MustLogin']);
 $routes->get('/lansia/update/(:any)', 'Lansia::update/$1', ['filter' => 'MustLogin']);
+
+// Data Kunjungan Lansia
+$routes->get('lansia/kunjungan/(:any)/(:any)', 'Lansia::kunjungan/$1/$2', ['filter' => 'MustLogin']);
+
+$routes->post('/kunjungan/lansia/save', 'Lansia::add_kunjungan', ['filter' => 'MustLogin']);
+$routes->post('/kunjungan/lansia/set/(:any)', 'Lansia::set_kunjungan/$1', ['filter' => 'MustLogin']);

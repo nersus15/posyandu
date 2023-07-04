@@ -171,6 +171,7 @@ class Bumil extends BaseController
     {
         $post = $this->request->getPost();
         $message = null;
+        $ttl = waktu(null, MYSQL_DATE_FORMAT);
         if ($post['ingat_ttl'] == 0 && !is_numeric($post['umur'])) {
             $message = "Umur harus angka";
         } else {
