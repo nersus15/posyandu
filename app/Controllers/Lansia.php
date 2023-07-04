@@ -45,7 +45,12 @@ class Lansia extends BaseController
                 'lansia' => [
                     'view' => 'components/datatables',
                     'data' => [
-                        'adaTambah' => true,
+                        'buttons' => [
+                            [
+                                'text' => 'Tambah Data',
+                                'action' => 'function( e, dt, node, config ){location.href = basepath + "lansia/add"}'
+                            ]
+                        ],
                         'desc' => $session->getFlashdata('response'),
                         'dtid' => 'dt-lansia',
                         'header' => [
@@ -53,7 +58,12 @@ class Lansia extends BaseController
                                 return $key + 1;
                             },
                             'Nama' => 'nama',
-                            'Nama Suami' => 'suami',
+                            'Alamat' => 'suami',
+                            'Alamat' => function ($rec) use ($wilayah) {
+                                $desa = $wilayah[$rec['alamat']];
+                                $kecamatan = $wilayah[substr($rec['alamat'], 0, 8) . '.0000'];
+                                return 'Desa ' . $desa . ', Kec. ' . $kecamatan;
+                            },
                             'Tanggal Lahir' => function ($data) {
                                 $badge = null;
                                 if ($data['ttl_estimasi'] == 1) {
@@ -61,15 +71,7 @@ class Lansia extends BaseController
                                 }
                                 return $data['ttl'] . $badge;
                             },
-                            'Alamat Domisili' => 'domisili',
-                            'Alamat' => function ($rec) use ($wilayah) {
-                                $desa = $wilayah[$rec['alamat']];
-                                $kecamatan = $wilayah[substr($rec['alamat'], 0, 8) . '.0000'];
-                                return 'Desa ' . $desa . ', Kec. ' . $kecamatan;
-                            },
-                            'Pendidikan' => 'pendidikan',
-                            'Pekerjaan' => 'pekerjaan',
-                            'Agama' => 'agama',
+                            'NIK' => 'nik',
                             'Action' => function ($data) {
                                 return '<div style="margin:auto" class="row"><a href="' . base_url('lansia/kunjungan/' . $data['id']) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/delete/' . $data['id']) . '" class="btb btn-xs btn-danger">Delete</a></div>';
                             }
@@ -81,4 +83,11 @@ class Lansia extends BaseController
         ];
         return view('templates/adminlte', $data);
     }
+
+    public function add(){}
+    public function update($id = null){}
+    public function delete($id = null){}
+    public function set($id = null){}
+    public function save(){}
+    public function forms($id = null){}
 }
