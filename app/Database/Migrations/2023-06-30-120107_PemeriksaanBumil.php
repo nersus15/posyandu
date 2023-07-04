@@ -142,6 +142,7 @@ class PemeriksaanBumil extends Migration
             ],
             
         ]);
+        $this->forge->addForeignKey('ibu', 'bumil', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addKey('id', true, true);
         $this->forge->createTable('kunjungan_bumil');
     }
