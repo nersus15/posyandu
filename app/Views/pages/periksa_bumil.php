@@ -5,6 +5,7 @@ $data = $session->getFlashdata('dataKunjungan');
 if (!isset($mode)) $mode = 'baru';
 if (empty($data)) {
     $data = [
+        'id' => null,
         'tgl' =>  waktu(null, MYSQL_DATE_FORMAT),
         'gravida' =>  1,
         'paritas' =>  0,
@@ -27,7 +28,7 @@ if (empty($data)) {
         'kunjungan' =>  null,
         'kondisi_rumah' =>  null,
         'persediaan' =>  null,
-        'poyandu' =>  null,
+        'posyandu' =>  null,
         'dukun' => null
     ];
 }
@@ -59,7 +60,7 @@ if (isset($dataKunjungan) && !empty($dataKunjungan)) {
                     <div class="col-12">
                         <div class="form-group">
                             <label for="">Posyandu</label>
-                            <input type="text" name="poyandu" value="<?= $data['poyandu'] ?>" id="poyandu" class="form-control">
+                            <input type="text" name="posyandu" value="<?= $data['posyandu'] ?>" id="posyandu" class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="">Dukun</label>

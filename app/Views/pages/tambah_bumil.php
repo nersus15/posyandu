@@ -103,11 +103,12 @@ if (isset($dataBumil) && !empty($dataBumil)) {
                                 <?php endforeach ?>
                             </select>
                         </div>
-                    </div>
-                    <div class="form-group">
+                        <div class="form-group">
                             <label for="domisili">RT/RW</label>
                             <input type="text" value="<?= $data['rt'] ?>" required name="rt" id="rt" class="form-control">
                         </div>
+                    </div>
+
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label for="pendidikan">Pendidikan</label>
