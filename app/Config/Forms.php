@@ -48,4 +48,14 @@ class Forms extends BaseConfig{
         'posyandu' => 'posyandu',
         'dukun' => 'dukun'
     ];
+
+    public array $lansia = [
+        'id' => 'id',
+        'dibuat' => 'dibuat',
+        'nama' => 'nama',
+        'alamat' => 'alamat',
+        'ttl' => 'tanggal_lahir',
+        'estimasi' => 'estimasi_ttl',
+        'nik' => 'nik',
+    ];
 }

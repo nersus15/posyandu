@@ -63,6 +63,25 @@ if (!function_exists('getMimeType')) {
     }
 }
 
+if (!function_exists('load_script')) {
+    function load_script($script, $data = array(), $return = true)
+    {
+        $ext = pathinfo($script, PATHINFO_EXTENSION);
+        if (empty($ext)) $script .= '.js';
+        if (!file_exists(get_path(ASSETS_PATH . 'js/') . get_path($script))) return null;
+        ob_start();
+        if (!empty($data))
+            extract($data);
+        include_once get_path(ASSETS_PATH . 'js/') . get_path($script) . $ext;
+        $_script = ob_get_contents() ;
+        ob_end_clean();
+        if ($return)
+            return $_script;
+        else
+            echo $_script;
+    }
+}
+
 if (!function_exists('response')) {
     function response($message = '', $code = 200, $type = 'success', $format = 'json')
     {
@@ -761,86 +780,89 @@ if (!function_exists('getExt')) {
         return $extOnly ? $ext : ['extension' => $ext, 'filename' => $fname];
     }
 }
-if(!function_exists('c_isset')){
-    function c_isset($arr, $key){
+if (!function_exists('c_isset')) {
+    function c_isset($arr, $key)
+    {
         $keys = array_keys(is_object($arr) ? (array) $arr : $arr);
         return in_array($key, $keys);
     }
 }
 
-if(!function_exists('fieldmapping')){
-    function fieldmapping($config, $input, $defaultValue = array(), $petaNilai = array()){
+if (!function_exists('fieldmapping')) {
+    function fieldmapping($config, $input, $defaultValue = array(), $petaNilai = array())
+    {
         $configitem = config('Forms');
         $adaDefault = count($defaultValue) > 0;
         $adaPeta = count($petaNilai) > 0;
         $field = array();
-        if(!file_exists(APPPATH . 'config/Forms.php') || empty($configitem->$config))
+        if (!file_exists(APPPATH . 'config/Forms.php') || empty($configitem->$config))
             response(['message' => 'Config form ' . $config . ' Tidak ditemukan'], 404);
-        
-        foreach($configitem->$config as $k => $v){
-            if($adaDefault && c_isset($defaultValue, $k)){
-                if(c_isset($input, $k) && (is_null($input[$k]) || $input[$k] == ''))
+
+        foreach ($configitem->$config as $k => $v) {
+            if ($adaDefault && c_isset($defaultValue, $k)) {
+                if (c_isset($input, $k) && (is_null($input[$k]) || $input[$k] == ''))
                     $field[$v] = $defaultValue[$k];
                 else
                     $field[$v] = $input[$k];
-            }elseif((!$adaDefault || !c_isset($defaultValue, $k)) && c_isset($input, $k))
+            } elseif ((!$adaDefault || !c_isset($defaultValue, $k)) && c_isset($input, $k))
                 $field[$v] = $input[$k];
         }
-        
-        
-        if($adaPeta){
-            foreach($petaNilai as $key => $f){
-                foreach($f as $k => $v){
-                    if($field[$key] == $k)
+
+
+        if ($adaPeta) {
+            foreach ($petaNilai as $key => $f) {
+                foreach ($f as $k => $v) {
+                    if ($field[$key] == $k)
                         $field[$key] = $v;
                 }
             }
         }
-        foreach($field as $k => $f){
-            if($f == '#unset') // nanti jika dia defaultnya unset dia dihapus dari arraya agar tidak update kolom itu
+        foreach ($field as $k => $f) {
+            if ($f == '#unset') // nanti jika dia defaultnya unset dia dihapus dari arraya agar tidak update kolom itu
                 unset($field[$k]);
         }
         return $field;
     }
 }
 
-if(!function_exists('reversemapping')){
-    function reversemapping($config, $input, $defaultValue = array(), $petaNilai = array(), $batch = false){
+if (!function_exists('reversemapping')) {
+    function reversemapping($config, $input, $defaultValue = array(), $petaNilai = array(), $batch = false)
+    {
         $configitem = config('Forms');
         $adaDefault = count($defaultValue) > 0;
         $adaPeta = count($petaNilai) > 0;
         $field = array();
         $input = (array) $input;
-        if(!file_exists(APPPATH . 'config/Forms.php') || empty($configitem->$config))
+        if (!file_exists(APPPATH . 'config/Forms.php') || empty($configitem->$config))
             response(['message' => 'Config form ' . $config . ' Tidak ditemukan'], 404);
-        if($batch){
-            foreach($input as $k => $v){
+        if ($batch) {
+            foreach ($input as $k => $v) {
                 $field[$k] = reversemapping($config, $v, $defaultValue, $petaNilai);
             }
             return $field;
         }
 
-        foreach($configitem->$config as $k => $v){
-            if($adaDefault && c_isset($defaultValue, $v)){
-                if(c_isset($input, $v) && (is_null($input[$v]) || $input[$v] == ''))
+        foreach ($configitem->$config as $k => $v) {
+            if ($adaDefault && c_isset($defaultValue, $v)) {
+                if (c_isset($input, $v) && (is_null($input[$v]) || $input[$v] == ''))
                     $field[$k] = $defaultValue[$v];
                 else
                     $field[$k] = $input[$v];
-            }elseif((!$adaDefault || !c_isset($defaultValue, $v)) && c_isset($input, $v))
+            } elseif ((!$adaDefault || !c_isset($defaultValue, $v)) && c_isset($input, $v))
                 $field[$k] = $input[$v];
         }
-        
-        
-        if($adaPeta){
-            foreach($petaNilai as $key => $f){
-                foreach($f as $k => $v){
-                    if($field[$key] == $k)
+
+
+        if ($adaPeta) {
+            foreach ($petaNilai as $key => $f) {
+                foreach ($f as $k => $v) {
+                    if ($field[$key] == $k)
                         $field[$key] = $v;
                 }
             }
         }
-        foreach($field as $k => $f){
-            if($f == '#unset') // nanti jika dia defaultnya unset dia dihapus dari arraya agar tidak update kolom itu
+        foreach ($field as $k => $f) {
+            if ($f == '#unset') // nanti jika dia defaultnya unset dia dihapus dari arraya agar tidak update kolom itu
                 unset($field[$k]);
         }
         return $field;

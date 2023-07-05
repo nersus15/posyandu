@@ -13,7 +13,17 @@ class LansiaModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'id',
+        'registrar',
+        'dibuat',
+        'nama',
+        'alamat',
+        'tanggal_lahir',
+        'estimasi_ttl',
+        'nik',
+        'pemeriksaan'
+    ];
 
     // Dates
     protected $useTimestamps = false;
@@ -38,4 +48,52 @@ class LansiaModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    function get_pemeriksaan($id = null, $lansia, $tahun = null)
+    {
+        $data = [];
+        $onJoinKunjungan = 'lansia.id = kunjungan_lansia.lansia';
+        if(!empty($tahun)){
+            $onJoinKunjungan .= ' AND `kunjungan_lansia`.`bulan` LIKE "' . $tahun . '%"';
+        }
+        $q = $this->db->table('lansia')
+            ->select('lansia.*, kunjungan_lansia.bulan, kunjungan_lansia.berat, w1.nama kecamatan, w2.nama desa, kunjungan_lansia.id idkunjungan')
+            ->join('wilayah w1', 'w1.id = CONCAT(SUBSTR(lansia.alamat, 1, 8), ".0000")', 'inner')
+            ->join('wilayah w2', 'w2.id = lansia.alamat', 'inner')
+            ->join('kunjungan_lansia', $onJoinKunjungan, 'left');
+
+        if(!empty($id))
+            $q->where('kunjungan_lansia.id', $id);
+
+        if(!empty($lansia))
+            $q->where('lansia.id', $lansia);
+        
+        // var_dump($q->getCompiledSelect());die;
+        $tmp = $q->get()->getResultObject();
+        foreach ($tmp as $v) {
+            if(isset($data[$v->id])){
+                $data[$v->id]['pemeriksaan'][$v->bulan]['berat'] = $v->berat;
+                $data[$v->id]['pemeriksaan'][$v->bulan]['id'] = $v->idkunjungan;
+            }else{
+                $data[$v->id] = [
+                    'id' => $v->id,
+                    'registrar' => $v->registrar,
+                    'dibuat' => $v->dibuat,
+                    'nama' => $v->nama,
+                    'alamat' => 'Desa ' . $v->desa . ', Kec. ' . $v->kecamatan,
+                    'tanggal_lahir' => $v->tanggal_lahir,
+                    'estimasi_ttl' => $v->estimasi_ttl,
+                    'nik' => $v->nik,
+                    'pemeriksaan' => []
+                ];
+                if(!empty($v->bulan)){
+                    $data[$v->id]['pemeriksaan'][$v->bulan] = [
+                        'berat' => $v->berat,
+                        'id' => $v->idkunjungan
+                    ];
+                }
+            }
+        }
+        return $data;
+    }
 }

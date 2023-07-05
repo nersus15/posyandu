@@ -14,6 +14,15 @@ class UserSeeder extends Seeder
                 'email'    => 'kamscode@mail.com',
                 'nama_lengkap' => 'Fathurrahman',
                 'password' => password_hash('kamscode', PASSWORD_DEFAULT),
+                'faskes' => 'Lepak',
+                'role' => 'petugas'
+            ],
+            [
+                'username' => 'kader',
+                'email'    => 'kader@mail.com',
+                'nama_lengkap' => 'Fathurrahman',
+                'role' => 'kader',
+                'password' => password_hash('kader', PASSWORD_DEFAULT),
                 'faskes' => 'Lepak'
             ]
         ];
