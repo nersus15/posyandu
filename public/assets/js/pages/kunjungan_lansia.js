@@ -20,4 +20,20 @@ $(document).ready(function(){
         form.find('#berat').val(value);
         modal.modal('show');
     });
+    $(".hapus-kunjungan-lansia").click(function(){
+        var ini = $(this);
+        var kunjungan = ini.data('kunjungan');
+        var yakin = confirm("Yakin Ingin menghapus data ?");
+        if(!yakin)
+            return;
+
+        $.post(basepath + 'kunjungan/lansia/delete', {'kunjungan': kunjungan}, function(res){
+            if(res.type == 'error'){
+                var card = $("#dt-lansia_wrapper").parents('.card');
+                card.find('.card-title').text(res.message);
+            }else{
+                location.reload();
+            }
+        });
+    });
 });

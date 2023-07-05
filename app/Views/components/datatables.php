@@ -70,9 +70,9 @@
         var ada_tambah = <?= $adaTambah ?? 'false' ?>;
         var buttons = <?= isset($buttons) && !empty($buttons) ? json_encode($buttons) : '[]' ?>;
         var options = {
-            "responsive": true,
+            "responsive": false,
             "lengthChange": true,
-            "autoWidth": true,
+            "autoWidth": false,
             "buttons": ["copy", "csv", "excel", "pdf", "print"]
         };
         if (ada_tambah) {

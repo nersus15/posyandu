@@ -52,19 +52,23 @@ class LansiaModel extends Model
     function get_pemeriksaan($id = null, $lansia, $tahun = null)
     {
         $data = [];
+        $onJoinKunjungan = 'lansia.id = kunjungan_lansia.lansia';
+        if(!empty($tahun)){
+            $onJoinKunjungan .= ' AND `kunjungan_lansia`.`bulan` LIKE "' . $tahun . '%"';
+        }
         $q = $this->db->table('lansia')
             ->select('lansia.*, kunjungan_lansia.bulan, kunjungan_lansia.berat, w1.nama kecamatan, w2.nama desa, kunjungan_lansia.id idkunjungan')
             ->join('wilayah w1', 'w1.id = CONCAT(SUBSTR(lansia.alamat, 1, 8), ".0000")', 'inner')
             ->join('wilayah w2', 'w2.id = lansia.alamat', 'inner')
-            ->join('kunjungan_lansia', 'lansia.id = kunjungan_lansia.lansia', 'inner');
+            ->join('kunjungan_lansia', $onJoinKunjungan, 'left');
+
         if(!empty($id))
             $q->where('kunjungan_lansia.id', $id);
 
         if(!empty($lansia))
             $q->where('lansia.id', $lansia);
         
-        if(!empty($tahun))
-            $q->like('kunjungan_lansia.bulan', $tahun, 'after');
+        // var_dump($q->getCompiledSelect());die;
         $tmp = $q->get()->getResultObject();
         foreach ($tmp as $v) {
             if(isset($data[$v->id])){
@@ -80,13 +84,14 @@ class LansiaModel extends Model
                     'tanggal_lahir' => $v->tanggal_lahir,
                     'estimasi_ttl' => $v->estimasi_ttl,
                     'nik' => $v->nik,
-                    'pemeriksaan' => [
-                        $v->bulan => [
-                            'berat' => $v->berat,
-                            'id' => $v->idkunjungan
-                        ]
-                    ]
+                    'pemeriksaan' => []
+                ];
+                if(!empty($v->bulan)){
+                    $data[$v->id]['pemeriksaan'][$v->bulan] = [
+                        'berat' => $v->berat,
+                        'id' => $v->idkunjungan
                     ];
+                }
             }
         }
         return $data;

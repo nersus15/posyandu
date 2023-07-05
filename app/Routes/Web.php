@@ -43,3 +43,4 @@ $routes->get('lansia/kunjungan/(:any)/(:any)', 'Lansia::kunjungan/$1/$2', ['filt
 
 $routes->post('/kunjungan/lansia/save', 'Lansia::add_kunjungan', ['filter' => 'MustLogin']);
 $routes->post('/kunjungan/lansia/set/(:any)', 'Lansia::set_kunjungan/$1', ['filter' => 'MustLogin']);
+$routes->post('/kunjungan/lansia/delete', 'Lansia::delete_kunjungan', ['filter' => 'MustLogin']);

@@ -73,7 +73,7 @@ class Lansia extends BaseController
                             },
                             'NIK' => 'nik',
                             'Action' => function ($data) {
-                                return '<div style="margin:auto" class="row"><a href="' . base_url('lansia/kunjungan/' . $data['id']) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/delete/' . $data['id']) . '" class="btb btn-xs btn-danger">Delete</a></div>';
+                                return '<div style="margin:auto" class="row"><a href="' . base_url('lansia/kunjungan/' . $data['id'] . '/' . date('Y')) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/delete/' . $data['id']) . '" class="btb btn-xs btn-danger">Delete</a></div>';
                             }
                         ],
                         'data' => $dataLansia
@@ -251,7 +251,13 @@ class Lansia extends BaseController
                 $value = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['berat'] : null;
                 $idKunjungan = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['id'] : null;
                 
-                $icon = '<i style="font-size: 12px;cursor:pointer" data-kunjungan="'.$idKunjungan.'" data-bulan="'. $i .'" data-value="'. $value .'" data-tahun="'. $tahunTerpilih .'" data-lansia="'. $lansia .'" class="ml-2 edit-kunjungan-lansia fas fa-pencil-alt" aria-hidden="true"></i>';
+                $icon = '<i style="font-size: 12px;cursor:pointer" data-kunjungan="'.$idKunjungan.'" data-bulan="'. $i .'" data-value="'. $value .'" data-tahun="'. $tahunTerpilih .'" data-lansia="'. $lansia .'" class="text-warning ml-2 edit-kunjungan-lansia fas fa-pencil-alt" aria-hidden="true"></i>';
+                if(date('Y') == $tahunTerpilih && $i > date('m'))
+                    $icon = null;
+
+                if(!is_null($value)){
+                    $icon .= '<i style="font-size: 12px;cursor:pointer" data-kunjungan="'.$idKunjungan.'" class="text-danger ml-2 hapus-kunjungan-lansia fas fa-trash-alt" aria-hidden="true"></i>';
+                }
                 return ($value) . $icon;
             };
         }
@@ -271,6 +277,10 @@ class Lansia extends BaseController
                     "vendor/adminlte/plugins/datatables-buttons/js/buttons.html5.min.js",
                     "vendor/adminlte/plugins/datatables-buttons/js/buttons.print.min.js",
                     "vendor/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js",
+                ]
+            ],
+            'dataFooter' => [
+                'extra_js' => [
                     "js/pages/kunjungan_lansia.js"
                 ]
             ],
@@ -280,7 +290,7 @@ class Lansia extends BaseController
             'contents' => [
                 'filter' => [
                     'view' => 'components/filter_tahun',
-                    'data' => ['selected' => $tahunTerpilih]
+                    'data' => ['tahunTerpilih' => $tahunTerpilih, 'lansia' => $lansia]
                 ],
                 'modal_tambah' => [
                     'view' => 'widgets/form_tambah_pemeriksaan_lansia',
@@ -289,12 +299,12 @@ class Lansia extends BaseController
                 'lansia' => [
                     'view' => 'components/datatables',
                     'data' => [
-                        'buttons' => [
-                            [
-                                'text' => 'Tambah Data',
-                                'action' => load_script('pages/action_kunjungan_lansia', ['lansia' => $lansia, 'formid' => 'form-pemeriksaan-lansia'])
-                            ]
-                        ],
+                        // 'buttons' => [
+                        //     [
+                        //         'text' => 'Tambah Data',
+                        //         'action' => load_script('pages/action_kunjungan_lansia', ['lansia' => $lansia, 'formid' => 'form-pemeriksaan-lansia'])
+                        //     ]
+                        // ],
                         'desc' => $session->getFlashdata('response'),
                         'dtid' => 'dt-lansia',
                         'header' => 'widgets/header_pemeriksaan_lansia',
@@ -361,5 +371,25 @@ class Lansia extends BaseController
     }
     public function delete_kunjungan()
     {
+        $post = $this->request->getPost();
+        $session = session();
+        $message = 'Data pemeriksaan berhasil dihapus';
+        $berhasil = true;
+        if(!isset($post['kunjungan'])){
+           $message = 'ID pemeriksaan invalid'; 
+           $berhasil = false;
+        }
+        $db = \Config\Database::connect();
+        $kunjungan = $db->table('kunjungan_lansia')->where('id', $post['kunjungan'])->get()->getResult();
+        if(empty($kunjungan)){
+           $message = 'Data pemeriksaan tidak ditemukan';
+           $berhasil = false;
+        }
+
+        if($berhasil){
+            $db->table('kunjungan_lansia')->where('id', $post['kunjungan'])->delete();
+            $session->setFlashdata(['response' => $message]);
+        }
+        return $this->response->setJSON(['message' => $message, 'type' => $berhasil ? 'success' : 'error']);
     }
 }
