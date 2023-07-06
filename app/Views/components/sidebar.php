@@ -77,7 +77,7 @@ if (!isset($activeMenu))
           </ul>
         </li>
         <?php endif ?>
-        <?php if(is_login('kader', 'bidan')): ?>
+        <?php if(is_login(['kader', 'bidan'])): ?>
         <li class="nav-item">
           <a href="<?= base_url('bumil') ?>" class="nav-link <?= $activeMenu == 'bumil' ? 'active' : '' ?>">
             <!-- <i class="nav-icon far fa-circle text-info"></i> -->
