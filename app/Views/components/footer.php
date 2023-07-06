@@ -32,7 +32,7 @@ else {
         }
     }
 
-    $autoLogout = ($jam * 60 * 60 * 1000) + (($menit * 60 * 1000)) + ($detik * 1000);
+    $autoLogout = ($jam * 60 * 60) + (($menit * 60)) + ($detik);
 }
 ?>
 <footer class="main-footer">
@@ -67,7 +67,7 @@ else {
         $(document).ready(function() {
             var interval = null;
             var inActivityTreshold = <?= $autoLogout ?>;
-            console.log("Batas waktu in active => " + inActivityTreshold);
+            console.log("Batas waktu in active => " + inActivityTreshold + ' Detik');
 
             function resetLastActivity() {
                 localStorage.setItem('posyandu_la', 0);
