@@ -110,10 +110,11 @@ class Bumil extends BaseController
         $map = [];
         if (is_login('kader')) {
             $headerDT = [
+                'Tanggal Periksa' => 'tgl_periksa',
                 'Bulan' => function ($rec) {
                     $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                     $bulan = intval(substr($rec['tgl_periksa'], 5, 7)) - 1;
-                    return $daftarBulan[$bulan];
+                    return $daftarBulan[$bulan] . ' ' . substr($rec['tgl_periksa'], 0, 4);
                 },
                 'Usia Kehamilan' => function($rec){
                     $usia = $rec['usia_kehamilan'];
