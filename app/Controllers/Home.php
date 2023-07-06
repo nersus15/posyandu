@@ -19,4 +19,15 @@ class Home extends BaseController
         ];
         return view('templates/adminlte', $data);
     }
+    function profile(){
+        $data = [
+            'dataHeader' => [
+                'title' => sessiondata('login', 'nama_lengkap')
+            ],
+            'sidebarOpt' => [
+                'activeMenu' => ''
+            ]
+        ];
+        return view('templates/adminlte', $data);
+    }
 }

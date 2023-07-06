@@ -25,7 +25,12 @@ class MustLogin implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if(!is_login())
+        $roles= null;
+        if(!empty($arguments)){
+            $roles = explode(';',$arguments[0]);
+        }
+        
+        if(!is_login($roles))
             return redirect('/');
     }
 
