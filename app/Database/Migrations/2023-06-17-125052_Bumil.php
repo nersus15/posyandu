@@ -11,7 +11,7 @@ class Bumil extends Migration
         $this->forge->addField([
             'id' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '10',
+                'constraint' => 10,
             ],
             'nomor' => [
                 'type' => 'VARCHAR',

@@ -160,6 +160,7 @@ class PemeriksaanBumil extends Migration
             ],
             'ttd' => [
                 'type' => 'VARCHAR',
+                'constraint' => 11,
                 'null' => true,
                 'comment' => ''
             ],
