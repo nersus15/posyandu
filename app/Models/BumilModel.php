@@ -68,4 +68,9 @@ class BumilModel extends Model
             'agama' => 'Islam'
         ];
     }
+    function getBYWilker($wilker){
+        $prefWil = prefiks_wilayah($wilker);
+        return $this->join('users', 'bumil.registrar = users.username')
+            ->like('wilayah_kerja', $prefWil, 'after')->select('bumil.*')->find();
+    }
 }

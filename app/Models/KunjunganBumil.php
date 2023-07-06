@@ -42,9 +42,11 @@ class KunjunganBumil extends Model
         'persalinan_persedian',
         'posyandu', 
         'dukun',
-        'lila' => 'lila',
-        'fundus' => 'fundus',
-        'usia_hamil' => 'usia_kehamilan',
+        'lila',
+        'fundus',
+        'usia_hamil',
+        'hb',
+        'ttd',
     ];
 
     // Dates

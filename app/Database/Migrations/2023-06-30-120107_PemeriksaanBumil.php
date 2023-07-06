@@ -158,6 +158,11 @@ class PemeriksaanBumil extends Migration
                 'null' => true,
                 'comment' => 'dalam hari'
             ],
+            'ttd' => [
+                'type' => 'VARCHAR',
+                'null' => true,
+                'comment' => ''
+            ],
 
         ]);
         $this->forge->addForeignKey('ibu', 'bumil', 'id', 'CASCADE', 'CASCADE');

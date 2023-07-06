@@ -59,6 +59,8 @@ class Forms extends BaseConfig{
         'lila' => 'lila',
         'fundus' => 'fundus',
         'usia_hamil' => 'usia_kehamilan',
+        'ttd' => 'ttd',
+        'hb' => 'hb'
     ];
 
     public array $lansia = [

@@ -20,7 +20,8 @@ class Bumil extends BaseController
     }
     public function index()
     {
-        $dataBumil = reversemapping('bumil', $this->bumilModel->where('registrar', sessiondata('login', 'username'))->findAll(), [], [], true);
+        $dataBumil =  $this->bumilModel->getBYWilker(sessiondata('login', 'wilayah_kerja'));
+        $dataBumil = reversemapping('bumil', $dataBumil, [], [], true);
         $session = session();
         $wilayahModel = new WilayahModel();
         $wilayah = $wilayahModel->findAll();
@@ -55,7 +56,7 @@ class Bumil extends BaseController
                 'bumil' => [
                     'view' => 'components/datatables',
                     'data' => [
-                        'adaTambah' => true,
+                        'adaTambah' => is_login('kader'),
                         'desc' => $session->getFlashdata('response'),
                         'dtid' => 'dt-bumil',
                         'header' => [
@@ -105,6 +106,56 @@ class Bumil extends BaseController
         $kunjunganBumilModel = new KunjunganBumil();
         $dataBumil['kunjungan'] = $kunjunganBumilModel->where('ibu', $id)->orderBy('dibuat', 'DESC')->findAll();
 
+        $headerDT = [];
+        $map = [];
+        if (is_login('kader')) {
+            $headerDT = [
+                'Bulan' => function ($rec) {
+                    $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                    $bulan = intval(substr($rec['tgl_periksa'], 5, 7)) - 1;
+                    return $daftarBulan[$bulan];
+                },
+                'Usia Kehamilan' => function($rec){
+                    $usia = $rec['usia_kehamilan'];
+                    $bulan = floor($usia/30) . ' Bulan';
+                    $hari = $usia%30 . ' Hari';
+                    return $bulan . ', ' . $hari;
+                },
+                'Hamil Ke' => 'gravida',
+                'TTD BKS' => 'ttd',
+                'BB' => 'bb',
+                'TB' => 'tb',
+                'Tinggi Fundus' => 'fundus',
+                'Lingkar Lengan Atas' => 'lila',
+                'HB' => 'hb',
+                'Actions' => function ($rec) {
+                    return '<div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/update/' . $rec['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/delete/' . $rec['id']) . '" class="btb btn-hapus-kunjungan-bumil btn-xs btn-danger">Delete</a></div>';
+                }
+                
+            ];
+        } elseif (is_login('bidan')) {
+            $headerDT = [
+                'Tanggal' => 'dibuat',
+                'Obstetrik' => function ($rec) {
+                    return 'Gravida: ' . $rec['gravida'] . '<br> Partus: ' . $rec['paritas'] . ' <br>Abortus: ' . $rec['abortus'] . ' <br>Hidup: ' . $rec['hidup'];
+                },
+                'HPHT' => 'hpht',
+                'Taksiran <br> Persalinan' => 'hpl',
+                'Persalinan <br> Sebelumnya' => 'persalinan_sebelumnya',
+                'BB' => function ($rec) {
+                    return !empty($rec['bb']) ? $rec['bb'] . ' Kg' : '';
+                },
+                'TB' => function ($rec) {
+                    return !empty($rec['tb']) ? $rec['tb'] . ' cm' : '';
+                },
+                'Buku KIA' => function ($rec) {
+                    return $rec['buku_kia'] == '1' ? 'Memiliki' : 'Tidak Memiliki';
+                },
+                'Actions' => function ($rec) {
+                    return '<div style="margin:auto" class="row"><a href="' . base_url('kunjungan/bumil/detail/' . $rec['id']) . '" class="btb btn-xs btn-info">Detail</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/update/' . $rec['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/delete/' . $rec['id']) . '" class="btb btn-hapus-kunjungan-bumil btn-xs btn-danger">Delete</a></div>';
+                }
+            ];
+        }
 
         $data = [
             'dataHeader' => [
@@ -144,27 +195,8 @@ class Bumil extends BaseController
                         ],
                         'desc' => $session->getFlashdata('response'),
                         'dtid' => 'dt-kunjungan-bumil',
-                        'header' => [
-                            'Tanggal' => 'dibuat',
-                            'Obstetrik' => function ($rec) {
-                                return 'Gravida: ' . $rec['gravida'] . '<br> Partus: ' . $rec['paritas'] . ' <br>Abortus: ' . $rec['abortus'] . ' <br>Hidup: ' . $rec['hidup'];
-                            },
-                            'HPHT' => 'hpht',
-                            'Taksiran <br> Persalinan' => 'hpl',
-                            'Persalinan <br> Sebelumnya' => 'persalinan_sebelumnya',
-                            'BB' => function ($rec) {
-                                return !empty($rec['bb']) ? $rec['bb'] . ' Kg' : '';
-                            },
-                            'TB' => function ($rec) {
-                                return !empty($rec['tb']) ? $rec['tb'] . ' cm' : '';
-                            },
-                            'Buku KIA' => function ($rec) {
-                                return $rec['buku_kia'] == '1' ? 'Memiliki' : 'Tidak Memiliki';
-                            },
-                            'Actions' => function ($rec) {
-                                return '<div style="margin:auto" class="row"><a href="' . base_url('kunjungan/bumil/detail/' . $rec['id']) . '" class="btb btn-xs btn-info">Detail</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/update/' . $rec['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/delete/' . $rec['id']) . '" class="btb btn-hapus-kunjungan-bumil btn-xs btn-danger">Delete</a></div>';
-                            }
-                        ],
+                        'header' => $headerDT,
+                        'map' => $map,
                         'data' => $dataBumil['kunjungan']
                     ]
                 ]
@@ -174,6 +206,8 @@ class Bumil extends BaseController
     }
     public function add()
     {
+        if (!is_login('kader'))
+            return redirect('bumil');
         return $this->form();
     }
 
@@ -359,7 +393,8 @@ class Bumil extends BaseController
         ];
         $peta = [];
         $message = null;
-        $data = fieldmapping('periksa_bumil', $post, $def, $peta);
+        $data = fieldmapping('periksa_bumil_' . sessiondata('login', 'role'), $post, $def, $peta);
+        // echo json_encode($data);die;
         try {
             $kunjunganBumil->update($id, $data);
         } catch (\Throwable $th) {
@@ -433,7 +468,7 @@ class Bumil extends BaseController
                 'tgl_persalinan' => [null]
             ];
             $ibu = $dataKunjungan['ibu'];
-            $dataKunjungan = reversemapping('periksa_bumil', $dataKunjungan, [], $peta);
+            $dataKunjungan = reversemapping('periksa_bumil_' . sessiondata('login', 'role'), $dataKunjungan, [], is_login('kader') ? [] : $peta);
             $dataKunjungan['id'] = $id;
         }
 
@@ -457,7 +492,7 @@ class Bumil extends BaseController
             ],
             'contents' => [
                 'bumil' => [
-                    'view' => 'pages/periksa_bumil',
+                    'view' => is_login('bidan') ? 'pages/periksa_bumil' : 'pages/periksa_bumil_kader',
                     'data' => ['dataKunjungan' => $dataKunjungan, 'ibu' => $ibu, 'mode' => empty($id) ? 'baru' : 'edit']
                 ]
             ]

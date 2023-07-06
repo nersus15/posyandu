@@ -14,8 +14,9 @@ class UserSeeder extends Seeder
                 'email'    => 'bidan@mail.com',
                 'nama_lengkap' => 'Fathurrahman',
                 'password' => password_hash('bidan', PASSWORD_DEFAULT),
-                'faskes' => 'Lepak',
-                'role' => 'bidan'
+                'faskes' => 'Rensing',
+                'role' => 'bidan',
+                'wilayah_kerja' => '52.03.19.0000'
             ],
             [
                 'username' => 'kader',
@@ -23,7 +24,8 @@ class UserSeeder extends Seeder
                 'nama_lengkap' => 'Fathurrahman',
                 'role' => 'kader',
                 'password' => password_hash('kader', PASSWORD_DEFAULT),
-                'faskes' => 'Lepak'
+                'faskes' => 'Rensing',
+                'wilayah_kerja' => '52.03.19.2001'
             ]
         ];
 

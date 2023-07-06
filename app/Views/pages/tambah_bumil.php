@@ -56,10 +56,12 @@ if (isset($dataBumil) && !empty($dataBumil)) {
             <form action="<?= $mode == 'baru' ? base_url('bumil/add') : base_url('bumil/set/' . $data['id']) ?>" method="POST">
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
-                        <div class="form-group">
+                        <?php if(sessiondata('login', 'role') == 'bidan'): ?>
+                            <div class="form-group">
                             <label for="no">Nomor Ibu <span class="symbol-required"></span></label>
                             <input value="<?= $data['no'] ?>" type="text" required maxlength="10" minlength="9" name="no" id="no" class="form-control">
                         </div>
+                        <?php endif?>
                         <div class="form-group">
                             <label for="nama">Nama Ibu <span class="symbol-required"></span></label>
                             <input value="<?= $data['nama'] ?>" type="text" required name="nama" id="nama" class="form-control">
