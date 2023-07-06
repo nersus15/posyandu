@@ -77,12 +77,14 @@ if (!isset($activeMenu))
           </ul>
         </li>
         <?php endif ?>
+        <?php if(is_login('kader', 'bidan')): ?>
         <li class="nav-item">
           <a href="<?= base_url('bumil') ?>" class="nav-link <?= $activeMenu == 'bumil' ? 'active' : '' ?>">
             <!-- <i class="nav-icon far fa-circle text-info"></i> -->
             <p>Data Ibu Hamil</p>
           </a>
         </li>
+        <?php endif ?>
         <?php if(is_login('kader')): ?>
         <li class="nav-item">
           <a href="<?= base_url('lansia') ?>" class="nav-link <?= $activeMenu == 'lansia' ? 'active' : '' ?>">
