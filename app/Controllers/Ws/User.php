@@ -35,4 +35,9 @@ class User extends BaseController
         $session->remove('login');
         return redirect('/')->with('loginMessage', 'Anda baru saja logout');
     }
+
+    function getByUsername($username){
+        $data = $this->userModel->find($username);
+        return $this->response->setJSON($data);
+    }
 }

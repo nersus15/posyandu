@@ -94,7 +94,12 @@ if (isset($dataBumil) && !empty($dataBumil)) {
                         </div>
                         <div class="form-group">
                             <label for="domisili">Alamat Domisili <span class="symbol-required"></span></label>
-                            <input type="text" value="<?= $data['domisili'] ?>" required name="domisili" id="domisili" class="form-control">
+                            <select name="domisili" id="domisili" class="form-control">
+                                <option value="">Pilih</option>
+                                <?php foreach ($wil as $w) : ?>
+                                    <option <?= $data['domisili'] == $w['id'] ? 'selected' : '' ?> value="<?= $w['id'] ?>"><?= $w['nama'] ?></option>
+                                <?php endforeach ?>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="alamat">Alamat <span class="symbol-required"></span></label>

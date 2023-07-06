@@ -23,6 +23,9 @@ class User extends Model
         'alamat',
         'photo',
         'faskes',
+        'registrar',
+        'dibuat', 
+        'wilayah_kerja'
     ];
 
     // Validation
@@ -44,7 +47,7 @@ class User extends Model
 
     function login($username, $password)
     {
-        $user = $this->join('wilayah', 'wilayah.id = users.wilayah_kerja')->select('wilayah.nama, users.*')->where('username', $username)->find();
+        $user = $this->join('wilayah', 'wilayah.id = users.wilayah_kerja', 'left')->select('wilayah.nama, users.*')->where('username', $username)->find();
         
         if (empty($user))
             return [false, 'Username <b>"' . $username . '"</b> Tidak ditemukan'];

@@ -9,6 +9,12 @@ class Users extends Migration
     public function up()
     {
         $this->forge->addField([
+            'dibuat DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+            'registrar' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '46',
+                'null' => true
+            ],
             'username' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '46',
@@ -68,8 +74,8 @@ class Users extends Migration
             ]
         ]);
         $this->forge->addKey('username', true, true);
-        $this->forge->addKey('hp', true, true);
-        $this->forge->addKey('email', true, true);
+        $this->forge->addKey('hp', false, true);
+        $this->forge->addKey('email', false, true);
         $this->forge->createTable('users');
     }
 

@@ -60,3 +60,13 @@ $routes->get('anak/kunjungan/(:any)', 'Anak::kunjungan/$1/$2', ['filter' => 'Mus
 $routes->post('/kunjungan/anak/save', 'Anak::add_kunjungan', ['filter' => 'MustLogin:kader']);
 $routes->post('/kunjungan/anak/set/(:any)', 'Anak::set_kunjungan/$1', ['filter' => 'MustLogin:kader']);
 $routes->post('/kunjungan/anak/delete', 'Anak::delete_kunjungan', ['filter' => 'MustLogin:kader']);
+
+
+// Data User
+$routes->get('/ws/user/(:any)', 'Ws\User::getByUsername/$1', ['filter' => 'MustLogin:admin']);
+$routes->get('/kader', 'User::kader', ['filter' => 'MustLogin:admin']);
+$routes->get('/bidan', 'User::bidan', ['filter' => 'MustLogin:admin']);
+
+$routes->post('/user/set', 'User::set', ['filter' => 'MustLogin:admin']);
+$routes->get('/user/delete/(:any)', 'User::delete/$1', ['filter' => 'MustLogin:admin']);
+$routes->post('/user/save', 'User::save', ['filter' => 'MustLogin:admin']);

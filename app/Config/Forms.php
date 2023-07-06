@@ -4,6 +4,18 @@ namespace Config\Additional;
 use CodeIgniter\Config\BaseConfig;
 
 class Forms extends BaseConfig{
+    public array $user = [
+        'username' => 'username',
+        'nama' => 'nama_lengkap',
+        'email' => 'email',
+        'alamat' => 'alamat',
+        'hp' => 'hp',
+        'wilker' => 'wilayah_kerja',
+        'dibuat' => 'dibuat',
+        'faskes' => 'faskes',
+        'photo' => 'photo',
+        'role' => 'role'
+    ];
     public array $bumil = [
         'nama' => 'nama',
         'suami' => 'nama_suami',
