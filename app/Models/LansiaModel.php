@@ -49,7 +49,7 @@ class LansiaModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    function get_pemeriksaan($id = null, $lansia, $tahun = null)
+    function get_pemeriksaan($id = null, $lansia = null, $tahun = null)
     {
         $data = [];
         $onJoinKunjungan = 'lansia.id = kunjungan_lansia.lansia';
