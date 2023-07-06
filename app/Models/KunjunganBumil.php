@@ -44,7 +44,7 @@ class KunjunganBumil extends Model
         'dukun',
         'lila',
         'fundus',
-        'usia_hamil',
+        'usia_kehamilan',
         'hb',
         'ttd',
     ];
