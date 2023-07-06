@@ -8,7 +8,8 @@ class Home extends BaseController
     {
         return view('pages/login');
     }
-    public function dashboard(){
+    public function dashboard()
+    {
         $data = [
             'dataHeader' => [
                 'title' => 'Dashboard'
@@ -19,7 +20,8 @@ class Home extends BaseController
         ];
         return view('templates/adminlte', $data);
     }
-    function profile(){
+    function profile()
+    {
         $data = [
             'dataHeader' => [
                 'title' => sessiondata('login', 'nama_lengkap')

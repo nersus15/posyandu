@@ -8,6 +8,15 @@ use CodeIgniter\Session\Handlers\FileHandler;
 class App extends BaseConfig
 {
     /**
+     * Config untuk otomatis logout dalam waktu tertentu
+     * jika true default = 12 jam
+     * bisa diisi dengan 1h berarti 1 jam, 1m berarti 1 menit dan 1s berarti 1 detik
+     * bisa juga dengan kombinasi, contoh 1h2m3s atau 2m3s5h atau 2s5h2m
+     */
+
+    public $autoLogout = '1h';
+
+    /** 
      * --------------------------------------------------------------------------
      * Base Site URL
      * --------------------------------------------------------------------------

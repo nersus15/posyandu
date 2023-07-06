@@ -18,7 +18,7 @@
                     <h3 class="card-title"><?= $desc ?? null ?></h3>
                 </div>
                 <!-- /.card-header -->
-                <div class="card-body">
+                <div style="overflow-x: scroll;" class="card-body">
                     <table id="<?= $dtid ?? $idContent ?>" class="table table-bordered table-hover">
                         <thead>
                             <?php if (is_array($header)) : ?>
