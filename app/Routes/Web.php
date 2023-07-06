@@ -6,7 +6,6 @@ $routes = Services::routes();
 // $routes->setAutoRoute(true);
 
 $routes->get('dashboard', 'Home::dashboard', ['filter' => 'MustLogin']);
-$routes->get('anak/list/(:any)', 'Anak::list/$1', ['filter' => 'MustLogin']);
 
 $routes->post('ws/user/login', 'Ws\User::login');
 $routes->get('ws/user/logout', 'Ws\User::logout');
@@ -44,3 +43,19 @@ $routes->get('lansia/kunjungan/(:any)/(:any)', 'Lansia::kunjungan/$1/$2', ['filt
 $routes->post('/kunjungan/lansia/save', 'Lansia::add_kunjungan', ['filter' => 'MustLogin']);
 $routes->post('/kunjungan/lansia/set/(:any)', 'Lansia::set_kunjungan/$1', ['filter' => 'MustLogin']);
 $routes->post('/kunjungan/lansia/delete', 'Lansia::delete_kunjungan', ['filter' => 'MustLogin']);
+
+// Data Anak
+$routes->get('anak/list', 'Anak::list', ['filter' => 'MustLogin']);
+$routes->get('anak/list/(:any)', 'Anak::list/$1', ['filter' => 'MustLogin']);
+$routes->get('anak/delete/(:any)', 'Anak::delete/$1', ['filter' => 'MustLogin']);
+$routes->get('anak/update/(:any)', 'Anak::update/$1', ['filter' => 'MustLogin']);
+$routes->get('anak/daftar', 'Anak::add', ['filter' => 'MustLogin']);
+$routes->post('anak/daftar', 'Anak::save', ['filter' => 'MustLogin']);
+$routes->post('anak/set', 'Anak::set', ['filter' => 'MustLogin']);
+
+// Kunjungan Anak
+$routes->get('anak/kunjungan/(:any)', 'Anak::kunjungan/$1/$2', ['filter' => 'MustLogin']);
+
+$routes->post('/kunjungan/anak/save', 'Anak::add_kunjungan', ['filter' => 'MustLogin']);
+$routes->post('/kunjungan/anak/set/(:any)', 'Anak::set_kunjungan/$1', ['filter' => 'MustLogin']);
+$routes->post('/kunjungan/anak/delete', 'Anak::delete_kunjungan', ['filter' => 'MustLogin']);

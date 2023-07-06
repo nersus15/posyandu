@@ -10,8 +10,8 @@
     <th class="middle center" rowspan="2">Nama</th>
     <th class="middle center" rowspan="2">Alamat</th>
     <th class="middle center" rowspan="2">Tanggal Lahir</th>
-    <th class="middle center" rowspan="2">NIK</th>
-    <th class="middle center" colspan="12">Hasil Penimbangan</th>
+    <th class="middle center" rowspan="2">Ibu</th>
+    <th class="middle center" colspan="12">Hasil Penimbangan BB/TB (gr/cm)</th>
 </tr>
 <tr>
     <th>Jan</th>

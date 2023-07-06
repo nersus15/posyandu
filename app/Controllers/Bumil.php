@@ -43,6 +43,11 @@ class Bumil extends BaseController
                     "vendor/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js",
                 ]
             ],
+            'dataFooter' => [
+                'extra_js' => [
+                    'js/pages/bumil.js'
+                ]
+            ],
             'sidebarOpt' => [
                 'activeMenu' => 'bumil'
             ],
@@ -76,7 +81,7 @@ class Bumil extends BaseController
                             'Pekerjaan' => 'pekerjaan',
                             'Agama' => 'agama',
                             'Action' => function ($data) {
-                                return '<div style="margin:auto" class="row"><a href="' . base_url('bumil/kunjungan/' . $data['id']) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('bumil/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('bumil/delete/' . $data['id']) . '" class="btb btn-xs btn-danger">Delete</a></div>';
+                                return '<div style="margin:auto" class="row"><a href="' . base_url('bumil/kunjungan/' . $data['id']) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('bumil/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('bumil/delete/' . $data['id']) . '" class="btb btn-hapus-bumil btn-xs btn-danger">Delete</a></div>';
                             }
                         ],
                         'data' => $dataBumil
@@ -119,6 +124,11 @@ class Bumil extends BaseController
                     "vendor/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js",
                 ]
             ],
+            'dataFooter' => [
+                'extra_js' => [
+                    'js/pages/bumil.js'
+                ]
+            ],
             'sidebarOpt' => [
                 'activeMenu' => 'bumil'
             ],
@@ -152,7 +162,7 @@ class Bumil extends BaseController
                                 return $rec['buku_kia'] == '1' ? 'Memiliki' : 'Tidak Memiliki';
                             },
                             'Actions' => function ($rec) {
-                                return '<div style="margin:auto" class="row"><a href="' . base_url('kunjungan/bumil/detail/' . $rec['id']) . '" class="btb btn-xs btn-info">Detail</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/update/' . $rec['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/delete/' . $rec['id']) . '" class="btb btn-xs btn-danger">Delete</a></div>';
+                                return '<div style="margin:auto" class="row"><a href="' . base_url('kunjungan/bumil/detail/' . $rec['id']) . '" class="btb btn-xs btn-info">Detail</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/update/' . $rec['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/delete/' . $rec['id']) . '" class="btb btn-hapus-kunjungan-bumil btn-xs btn-danger">Delete</a></div>';
                             }
                         ],
                         'data' => $dataBumil['kunjungan']

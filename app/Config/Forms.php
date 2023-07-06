@@ -58,4 +58,17 @@ class Forms extends BaseConfig{
         'estimasi' => 'estimasi_ttl',
         'nik' => 'nik',
     ];
+    public array $anak = [
+        'id' => 'id',
+        'dibuat' => 'dibuat',
+        'nama' => 'nama',
+        'alamat' => 'alamat',
+        'ttl' => 'tanggal_lahir',
+        'estimasi' => 'estimasi_ttl' ,
+        'kelamin' => 'kelamin',
+        'bbl' => 'bbl',
+        'ibu' => 'ibu',
+        'ayah' => 'ayah',
+        'akb' => 'akb'
+    ];
 }
