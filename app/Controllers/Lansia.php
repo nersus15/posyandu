@@ -38,6 +38,11 @@ class Lansia extends BaseController
                     "vendor/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js",
                 ]
             ],
+            'dataFooter' => [
+                'extra_js' => [
+                    'js/pages/kunjungan_lansia.js'
+                ]
+            ],
             'sidebarOpt' => [
                 'activeMenu' => 'lansia'
             ],
@@ -58,7 +63,6 @@ class Lansia extends BaseController
                                 return $key + 1;
                             },
                             'Nama' => 'nama',
-                            'Alamat' => 'suami',
                             'Alamat' => function ($rec) use ($wilayah) {
                                 $desa = $wilayah[$rec['alamat']];
                                 $kecamatan = $wilayah[substr($rec['alamat'], 0, 8) . '.0000'];
@@ -73,7 +77,7 @@ class Lansia extends BaseController
                             },
                             'NIK' => 'nik',
                             'Action' => function ($data) {
-                                return '<div style="margin:auto" class="row"><a href="' . base_url('lansia/kunjungan/' . $data['id'] . '/' . date('Y')) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/delete/' . $data['id']) . '" class="btb btn-xs btn-danger">Delete</a></div>';
+                                return '<div style="margin:auto" class="row"><a href="' . base_url('lansia/kunjungan/' . $data['id'] . '/' . date('Y')) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/delete/' . $data['id']) . '" class="btb btn-hapus-lansia btn-xs btn-danger">Delete</a></div>';
                             }
                         ],
                         'data' => $dataLansia
@@ -130,7 +134,7 @@ class Lansia extends BaseController
                 $message = htmlspecialchars($th->getMessage());
             }
         }
-        return redirect(empty($message) ? 'lansia' : 'lansia/add')->with('response', $message)->with('lansiaData', $post);
+        return redirect()->to(base_url(empty($message) ? 'lansia' : 'lansia/add'))->with('response', $message)->with('lansiaData', $post);
     }
     public function save()
     {
@@ -151,7 +155,7 @@ class Lansia extends BaseController
                 'ttl' => $ttl
             );
             $data = fieldmapping('lansia', $post, $def);
-            $data['id'] = random(10);
+            $data['id'] = random(8);
             $data['dibuat'] = waktu();
             $data['estimasi_ttl'] = $estimasi;
             $data['registrar'] = sessiondata('login', 'username');
@@ -162,7 +166,7 @@ class Lansia extends BaseController
                 $message = htmlspecialchars($th->getMessage());
             }
         }
-        return redirect(empty($message) ? 'lansia' : 'lansia/add')->with('response', $message)->with('lansiaData', $post);
+        return redirect()->to(base_url(empty($message) ? 'lansia' : 'lansia/add'))->with('response', $message)->with('lansiaData', $post);
     }
     public function forms($id = null)
     {
@@ -237,9 +241,6 @@ class Lansia extends BaseController
         $wilayah = array_combine(array_column($wilayah, 'id'), array_column($wilayah, 'nama'));
         
         $map = [
-            function ($rec, $key, $index) {
-                return $index;
-            },
             'nama',
             'alamat',
             'ttl',
@@ -290,7 +291,7 @@ class Lansia extends BaseController
             'contents' => [
                 'filter' => [
                     'view' => 'components/filter_tahun',
-                    'data' => ['tahunTerpilih' => $tahunTerpilih, 'lansia' => $lansia]
+                    'data' => ['tahunTerpilih' => $tahunTerpilih, 'id' => $lansia, 'callbackUrl' => 'lansia/kunjungan/']
                 ],
                 'modal_tambah' => [
                     'view' => 'widgets/form_tambah_pemeriksaan_lansia',

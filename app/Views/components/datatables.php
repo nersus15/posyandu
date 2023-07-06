@@ -2,6 +2,7 @@
     if(!is_array($header) && !isset($map))
         throw new Exception("Jika header menggunakan string maka harus menyertakan mapping value", 1);
         
+    if(!isset($adaTambah)) $adaTambah = false;
 ?>
 <style>
     th {
@@ -67,7 +68,7 @@
 <script>
     $(document).ready(function() {
         var dtid = "<?= $dtid ?? $idContent ?>";
-        var ada_tambah = <?= $adaTambah ?? 'false' ?>;
+        var ada_tambah = <?= $adaTambah ? 'true' : 'false' ?>;
         var buttons = <?= isset($buttons) && !empty($buttons) ? json_encode($buttons) : '[]' ?>;
         var options = {
             "responsive": false,

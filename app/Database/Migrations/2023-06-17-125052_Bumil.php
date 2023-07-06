@@ -16,6 +16,7 @@ class Bumil extends Migration
             'nomor' => [
                 'type' => 'VARCHAR',
                 'constraint' => 10,
+                'null' => true,
             ],
             'rt' => [
                 'type' => 'VARCHAR',

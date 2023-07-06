@@ -1,5 +1,5 @@
 <?php
-    if(isset($sidebarOpt) && is_array($sidebarOpt) && !empty($sidebarOpt)) extract($sidebarOpt);
+if (isset($sidebarOpt) && is_array($sidebarOpt) && !empty($sidebarOpt)) extract($sidebarOpt);
 
 if (!isset($activeMenu))
   $activeMenu = '';
@@ -34,8 +34,8 @@ if (!isset($activeMenu))
             <p>Dashboard</p>
           </a>
         </li>
-        <li class="nav-item <?= in_array($activeMenu, ['bayi05', 'bayi611', 'bayi1223', 'bayi2459']) ? 'menu-open' : '' ?>">
-          <a href="#" class="nav-link <?= in_array($activeMenu, ['bayi05', 'bayi611', 'bayi1223', 'bayi2459']) ? 'actaive' : '' ?>">
+        <li class="nav-item <?= in_array($activeMenu, ['bayi', 'bayi05', 'bayi611', 'bayi1223', 'bayi2459']) ? 'menu-open' : '' ?>">
+          <a href="<?= base_url('anak/list') ?>" class="nav-link <?= in_array($activeMenu, ['bayi', 'bayi05', 'bayi611', 'bayi1223', 'bayi2459']) ? 'actaive' : '' ?>">
             <i class="nav-icon far fa-peoples"></i>
             <p>
               Data Bayi/Balita
@@ -43,6 +43,12 @@ if (!isset($activeMenu))
             </p>
           </a>
           <ul class="nav nav-treeview ml-3">
+            <li class="nav-item">
+              <a href="<?= base_url('anak/list') ?>" class="nav-link <?= $activeMenu == 'bayi' ? 'active' : '' ?>">
+                <!-- <i class="far fa-circle nav-icon"></i> -->
+                <p>Semua</p>
+              </a>
+            </li>
             <li class="nav-item">
               <a href="<?= base_url('anak/list/05') ?>" class="nav-link <?= $activeMenu == 'bayi05' ? 'active' : '' ?>">
                 <!-- <i class="far fa-circle nav-icon"></i> -->

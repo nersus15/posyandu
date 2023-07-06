@@ -34,9 +34,10 @@
 <script>
     $(document).ready(function(){
         var tahunTerpilih = <?= $tahunTerpilih ?>;
-        var lansia = "<?= $lansia?>";
+        var id = "<?= $id?>";
+        var callbackUrl = "<?= $callbackUrl ?>"
         $("#filter-tahun").change(function(){
-            location.href = basepath + 'lansia/kunjungan/' + lansia + '/' + $(this).val(); 
+            location.href = basepath + callbackUrl + id + '/' + $(this).val(); 
         });
     });
 </script>

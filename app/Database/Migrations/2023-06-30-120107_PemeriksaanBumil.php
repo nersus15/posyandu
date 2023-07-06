@@ -83,8 +83,8 @@ class PemeriksaanBumil extends Migration
             ],
             'buku_kia' => [
                 'type' => 'ENUM',
-                'default' => '0',
-                'constraint' => ['1', '0']
+                'default' => '',
+                'constraint' => ['', '1', '0']
             ],
             'riwayat_komplikasi' => [
                 'type' => 'VARCHAR', 
@@ -140,7 +140,30 @@ class PemeriksaanBumil extends Migration
                 'constraint' => 46,
                 'null' => true
             ],
-            
+
+            'lila' => [
+                'type' => 'INT',
+                'null' => true
+            ],
+            'fundus' => [
+                'type' => 'INT',
+                'null' => true
+            ],
+            'hb' => [
+                'type' => 'INT',
+                'null' => true
+            ],
+            'usia_kehamilan' => [
+                'type' => 'INT',
+                'null' => true,
+                'comment' => 'dalam hari'
+            ],
+            'ttd' => [
+                'type' => 'VARCHAR',
+                'null' => true,
+                'comment' => ''
+            ],
+
         ]);
         $this->forge->addForeignKey('ibu', 'bumil', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addKey('id', true, true);

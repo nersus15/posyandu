@@ -60,6 +60,12 @@ class Users extends Migration
                 'default' => null,
                 'null' => true,
             ],
+            'wilayah_kerja' => [
+                'type' => 'VARCHAR',
+                'constraint' => '20',
+                'default' => null,
+                'null' => true,
+            ]
         ]);
         $this->forge->addKey('username', true, true);
         $this->forge->addKey('hp', true, true);
