@@ -34,6 +34,7 @@ if (!isset($activeMenu))
             <p>Dashboard</p>
           </a>
         </li>
+        <?php if(is_login('kader')): ?>
         <li class="nav-item <?= in_array($activeMenu, ['bayi', 'bayi05', 'bayi611', 'bayi1223', 'bayi2459']) ? 'menu-open' : '' ?>">
           <a href="<?= base_url('anak/list') ?>" class="nav-link <?= in_array($activeMenu, ['bayi', 'bayi05', 'bayi611', 'bayi1223', 'bayi2459']) ? 'actaive' : '' ?>">
             <i class="nav-icon far fa-peoples"></i>
@@ -75,24 +76,29 @@ if (!isset($activeMenu))
             </li>
           </ul>
         </li>
+        <?php endif ?>
         <li class="nav-item">
           <a href="<?= base_url('bumil') ?>" class="nav-link <?= $activeMenu == 'bumil' ? 'active' : '' ?>">
             <!-- <i class="nav-icon far fa-circle text-info"></i> -->
             <p>Data Ibu Hamil</p>
           </a>
         </li>
+        <?php if(is_login('kader')): ?>
         <li class="nav-item">
           <a href="<?= base_url('lansia') ?>" class="nav-link <?= $activeMenu == 'lansia' ? 'active' : '' ?>">
             <!-- <i class="nav-icon far fa-circle text-info"></i> -->
             <p>Data Lansia</p>
           </a>
         </li>
+        <?php endif ?>
+        <?php if(is_login('admin')): ?>
         <li class="nav-item">
           <a href="<?= base_url('kader') ?>" class="nav-link <?= $activeMenu == 'kader' ? 'active' : '' ?>">
             <!-- <i class="nav-icon far fa-circle text-info"></i> -->
             <p>Data Kader</p>
           </a>
         </li>
+        <?php endif ?>
         <li class="nav-header">Akun</li>
         <li class="nav-item">
           <a href="<?= base_url('ws/user/logout') ?>" class="nav-link">
