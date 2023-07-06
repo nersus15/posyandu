@@ -30,7 +30,7 @@ class BumilModel extends Model
         'hp',
         'kartu_kesehatan',
         'nomor',
-        'rt'
+        'rt',
     ];
 
     // Dates

@@ -327,6 +327,7 @@ class Bumil extends BaseController
     {
         $kunjunganBumil = new KunjunganBumil();
         $post = $this->request->getPost();
+        $role = sessiondata('login', 'role');
         $def = [
             'tgl_periksa' => [null => waktu(null, MYSQL_DATE_FORMAT)],
             'persalinan_sebemulnya' => '#unset',
@@ -334,7 +335,7 @@ class Bumil extends BaseController
         ];
         $peta = [];
         $message = null;
-        $data = fieldmapping('periksa_bumil', $post, $def, $peta);
+        $data = fieldmapping('periksa_bumil_' . $role, $post, $def, $peta);
         $data['id'] = random(8);
         $data['dibuat'] = waktu();
         $data['registrar'] = sessiondata('login', 'username');

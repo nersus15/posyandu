@@ -22,7 +22,7 @@ class Forms extends BaseConfig{
         'rt' => 'rt'
     ];
 
-    public array $periksa_bumil = [
+    public array $periksa_bumil_bidan = [
         'tgl' => 'tgl_periksa',
         'gravida' => 'gravida',
         'paritas' => 'paritas',
@@ -47,6 +47,18 @@ class Forms extends BaseConfig{
         'persediaan' => 'persalinan_persedian',
         'posyandu' => 'posyandu',
         'dukun' => 'dukun'
+    ];
+
+    public $periksa_bumil_kader = [
+        'tgl' => 'tgl_periksa',
+        'gravida' => 'gravida',
+        'paritas' => 'paritas',
+        'abortus' => 'paritas',
+        'bb' => 'bb',
+        'tb' => 'tb',
+        'lila' => 'lila',
+        'fundus' => 'fundus',
+        'usia_hamil' => 'usia_kehamilan',
     ];
 
     public array $lansia = [

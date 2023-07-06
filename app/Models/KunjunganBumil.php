@@ -41,7 +41,10 @@ class KunjunganBumil extends Model
         'persalinan_kondisi_rumah',
         'persalinan_persedian',
         'posyandu', 
-        'dukun'
+        'dukun',
+        'lila' => 'lila',
+        'fundus' => 'fundus',
+        'usia_hamil' => 'usia_kehamilan',
     ];
 
     // Dates

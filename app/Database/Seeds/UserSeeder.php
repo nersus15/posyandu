@@ -10,12 +10,12 @@ class UserSeeder extends Seeder
     {
         $data = [
             [
-                'username' => 'kamscode',
-                'email'    => 'kamscode@mail.com',
+                'username' => 'bidan',
+                'email'    => 'bidan@mail.com',
                 'nama_lengkap' => 'Fathurrahman',
-                'password' => password_hash('kamscode', PASSWORD_DEFAULT),
+                'password' => password_hash('bidan', PASSWORD_DEFAULT),
                 'faskes' => 'Lepak',
-                'role' => 'petugas'
+                'role' => 'bidan'
             ],
             [
                 'username' => 'kader',
