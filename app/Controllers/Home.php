@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\BumilModel;
+use CodeIgniter\Files\File;
 
 class Home extends BaseController
 {
@@ -77,12 +78,61 @@ class Home extends BaseController
     {
         $data = [
             'dataHeader' => [
-                'title' => sessiondata('login', 'nama_lengkap')
+                'title' => sessiondata('login', 'nama_lengkap'),
+                'extra_js' => [
+                    'vendor/adminlte/plugins/select2/js/select2.js'
+                ],
+                'extra_css' => [
+                    'css/profile.css',
+                    'vendor/adminlte/plugins/select2/css/select2.css',
+                    'vendor/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.css'
+                ]
             ],
+            'contents' => [
+                'profile' => [
+                    'view' => 'pages/profile',
+                    'data' => sessiondata()
+                ]
+                ],
             'sidebarOpt' => [
                 'activeMenu' => ''
             ]
         ];
         return view('templates/adminlte', $data);
+    }
+    function update_profile()
+    {
+        $post = $this->request->getPost();
+        $userModel = new \App\Models\User();
+
+        $username = $post['username'];
+        $password = $post['password'];
+
+        unset($post['username'], $post['password']);
+        if (!empty($password)) {
+            $post['password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+        $post['alamat'] = empty($post['desa']) ? $post['kecamatan'] : $post['desa'];
+        $post['wilayah_kerja'] = empty($post['desa_kerja']) ? $post['kecamatan_kerja'] : $post['desa_kerja'];
+        unset($post['kecamatan'], $post['desa']);
+        $files = $this->request->getFiles();
+        try {
+            if (isset($files['photo'])) {
+                $img = $this->request->getFile('photo');
+                $nama = random(8) . '.' . getExt($img->getName(), true);
+                if (!$img->hasMoved()) {
+                    $filepath = $img->store(ASSETS_PATH . 'img/profile/', $nama);
+                    new File($filepath);
+                }
+                $post['photo'] = $nama;
+            }
+            $userModel->update($username, $post);
+        } catch (\Throwable $th) {
+            return redirect()->to('profile')->with('response', $th->getMessage());
+        }
+
+        $session = session();
+        $session->set('login', $post + ['username' => $username]);
+        return redirect()->to('profile')->with('response', 'Berhasil memperbarui profile');
     }
 }

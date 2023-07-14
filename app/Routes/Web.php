@@ -7,6 +7,7 @@ $routes = Services::routes();
 
 $routes->get('dashboard', 'Home::dashboard', ['filter' => 'MustLogin']);
 $routes->get('profile', 'Home::profile', ['filter' => 'MustLogin']);
+$routes->post('profile/update', 'Home::update_profile', ['filter' => 'MustLogin']);
 
 $routes->post('ws/user/login', 'Ws\User::login', ['filter' => 'NoLogin']);
 $routes->get('ws/user/logout', 'Ws\User::logout', ['filter' => 'MustLogin']);

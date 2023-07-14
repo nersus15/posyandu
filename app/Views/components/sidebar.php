@@ -18,10 +18,10 @@ if (!isset($activeMenu))
     <!-- Sidebar user (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="<?= assets_url('img/profile/' . sessiondata('login', 'photo', 'default.jpg')) ?>" class="img-circle elevation-2" alt="User Image">
+        <img style="object-fit: cover; height: 2.1rem; width: 2.1rem;" src="<?= assets_url('img/profile/' . sessiondata('login', 'photo', 'default.jpg')) ?>" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
-        <a href="<?= base_url('profile') ?>" class="d-block"><?= sessiondata("login", "nama_lengkap") ?? sessiondata("login", "username", 'No Login') ?></a>
+        <a id="profile" href="<?= base_url('profile') ?>" class="d-block"><?= sessiondata("login", "nama_lengkap") ?? sessiondata("login", "username", 'No Login') ?></a>
       </div>
     </div>
 
@@ -130,3 +130,13 @@ if (!isset($activeMenu))
   </div>
   <!-- /.sidebar -->
 </aside>
+
+<script>
+  $(document).ready(function(e) {
+    $("#profile").click(function(e) {
+      var admin = <?= is_login('admin') ? 'true' : 'false' ?>;
+      if (admin)
+        e.preventDefault()
+    })
+  })
+</script>
