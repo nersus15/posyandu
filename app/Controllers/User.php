@@ -26,7 +26,7 @@ class User extends BaseController
         $wilayah = $wilayahModel->findAll();
         $tmp = $wilayah;
         $wilayah = array_combine(array_column($wilayah, 'id'), array_column($wilayah, 'nama'));
-      
+
         $wilayahLengkap = [];
         $kecamatan = array_filter($tmp, function ($arr) {
             return $arr['level'] == 3;
@@ -86,7 +86,7 @@ class User extends BaseController
                     'data' => [
                         'formid' => $formid,
                         'role' => $role,
-                        'wilLengkap' => $wilayahLengkap, 
+                        'wilLengkap' => $wilayahLengkap,
                         'wil' => $role == 'kader' ? $wilayahLengkap : $wilayahKec
                     ]
                 ],
@@ -111,14 +111,14 @@ class User extends BaseController
                             'Email' => 'email',
                             'No. Hp' => 'hp',
                             'Alamat' => function ($rec) use ($wilayah) {
-                                if(empty($rec['alamat'])) return null;
+                                if (empty($rec['alamat'])) return null;
                                 $desa = $wilayah[$rec['alamat']];
                                 $kecamatan = $wilayah[substr($rec['alamat'], 0, 8) . '.0000'];
                                 return 'Desa ' . $desa . ', Kec. ' . $kecamatan;
                             },
                             'Puskesmas' => 'faskes',
                             'Wilayah Kerja' => function ($rec) use ($wilayah) {
-                                if(empty($rec['wilker'])) return null;
+                                if (empty($rec['wilker'])) return null;
                                 $desa = $wilayah[$rec['wilker']];
                                 $kecamatan = $wilayah[substr($rec['wilker'], 0, 8) . '.0000'];
 
@@ -126,8 +126,8 @@ class User extends BaseController
                                 $text = $levelWilayah == 3 ? 'Kec. ' . $kecamatan : 'Desa ' . $desa . ', Kec. ' . $kecamatan;
                                 return $text;
                             },
-                            'Action' => function ($data) use($formid, $role) {
-                                return '<div style="margin:auto" class="row mt-2"><a href="#" data-formid="'.$formid.'" data-username="'. $data['username'] .'" class="btb btn-update-user btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('user/delete/') . '" data-username="'. $data['username'] .'" data-role="'. $role .'" class="btb btn-hapus-user btn-xs btn-danger">Delete</a></div>';
+                            'Action' => function ($data) use ($formid, $role) {
+                                return '<div style="margin:auto" class="row mt-2"><a href="#" data-formid="' . $formid . '" data-username="' . $data['username'] . '" class="btb btn-update-user btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('user/delete/') . '" data-username="' . $data['username'] . '" data-role="' . $role . '" class="btb btn-hapus-user btn-xs btn-danger">Delete</a></div>';
                             }
                         ],
                         'data' => $dataUser
@@ -146,16 +146,17 @@ class User extends BaseController
         return $this->list('bidan');
     }
 
-    function save(){
+    function save()
+    {
         $post = $this->request->getPost();
-        $data= fieldmapping('user', $post);
+        $data = fieldmapping('user', $post);
         $message = 'Berhasil menambah data ' . $post['username'];
         $data['dibuat'] = waktu();
         $data['registrar'] = sessiondata('login', 'username');
         $data['password'] = password_hash($post['password'], PASSWORD_DEFAULT);
 
         $oldUser = $this->userModel->where('email', $data['email'])->orWhere('hp', $data['hp'])->findAll();
-        if(!empty($oldUser)){
+        if (!empty($oldUser)) {
             return redirect()->to(base_url('/' . $data['role']))->with('response', 'Email atau No.Hp sudah terdaftar, silahkan gunakan yang lain');
         }
 
@@ -164,27 +165,57 @@ class User extends BaseController
         } catch (\Throwable $th) {
             $message = $th->getMessage();
         }
-        
+
         return redirect()->to(base_url('/' . $data['role']))->with('response', $message);
     }
-    function set(){
+    function set()
+    {
         $post = $this->request->getPost();
         $message = 'Berhasil memperbarui data ' . $post['username'];
-        $data= fieldmapping('user', $post);
+        $data = fieldmapping('user', $post);
         try {
             $this->userModel->update($data['username'], $data);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
         }
-        
+
         return redirect()->to(base_url('/' . $data['role']))->with('response', $message);
     }
-    function delete($username, $role){
+    function delete($username, $role)
+    {
         $data = $this->userModel->find($username);
-        if(empty($data))
+        if (empty($data))
             return redirect()->to(base_url($role))->with('response', 'Data ' . $role . ' Tidak ditemukan');
 
         $this->userModel->delete($username);
         return redirect()->to(base_url($role))->with('response', 'Data ' . $role . ' ' . $username . ' Telah dihapus');
+    }
+
+    function forgot_password()
+    {
+        $data = [
+            'mode' => 'token',
+        ];
+        return view('pages/reset_password', $data);
+    }
+
+    function reset_password($token){
+        $data = [
+            'mode' => 'reset',
+            'token' => $token,
+            'valid' => true
+        ];
+
+        $db = \Config\Database::connect();
+        $token = $db->table('tokens')->where('token', $token)->get()->getRow();
+
+        if(empty($token))
+            $data['valid'] = "Token Invalid";
+        elseif(!empty($token->used))
+            $data['valid'] = "Token Sudah Digunakan";
+        elseif(time() > strtotime($token->expired))
+            $data['valid'] = 'Token Sudah Kadaluarsa, silahkan kirim email lagi melalui <a href="'.base_url("forgot/password").'">Link berikut </a>';
+        
+        return view('pages/reset_password', $data);
     }
 }
