@@ -1,16 +1,13 @@
 <?php
 $session = session();
-$message = $session->getFlashdata('loginMessage');
-$data = $session->getFlashdata('loginData');
-if(empty($data))
-    $data = ['username' => null, 'password' => null];
+$message = $session->getFlashdata('response');
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Login</title>
+    <title>Forgot Password</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
@@ -41,43 +38,47 @@ if(empty($data))
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
-                <form method="POST" action="<?= base_url('ws/user/login') ?>" class="login100-form validate-form">
-                    <span class="login100-form-title p-b-43">
-                        Login untuk melanjutkan
-                    </span>
+                <form method="POST" action="<?= base_url($mode == 'token' ? 'ws/user/sendtoken' : 'ws/user/reset') ?>" class="login100-form validate-form">
+                    <?php if ($mode == 'token') : ?>
+                        <span class="login100-form-title p-b-43">
+                            Masukkan Email Anda Untuk Reset Password
+                        </span>
 
-                    <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
-                        <input value="<?= $data['username'] ?>" required class="input100" type="text" name="user">
-                        <span class="focus-input100"></span>
-                        <span class="label-input100">Username atau Email</span>
-                    </div>
-
-
-                    <div class="wrap-input100 validate-input" data-validate="Password is required">
-                        <input value="<?= $data['password'] ?>" required class="input100" type="password" name="password">
-                        <span class="focus-input100"></span>
-                        <span class="label-input100">Password</span>
-                    </div>
-
-                    <div class="flex-sb-m w-full p-t-3 p-b-32">
-                        <div>
-                            <a href="<?= base_url('forgot/password') ?>" class="txt1">
-                                Lupa Password?
-                            </a>
+                        <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+                            <input required class="input100" type="email" name="email">
+                            <span class="focus-input100"></span>
+                            <span class="label-input100">Email</span>
                         </div>
-                    </div>
-
+                    <?php else : ?>
+                        <?php if ($valid === true) : ?>
+                            <input type="hidden" name="token" value="<?= $token ?>" />
+                            <div class="wrap-input100 validate-input" data-validate="Password is required">
+                                <input minlength="8" required class="input100" type="password" name="password">
+                                <span class="focus-input100"></span>
+                                <span class="label-input100">Password <span class="symbol-required"></span></span>
+                            </div>
+                            <div class="wrap-input100 validate-input" data-validate="Password is required">
+                                <input minlength="8" required class="input100" type="password" name="repassword">
+                                <span class="focus-input100"></span>
+                                <span class="label-input100">Masukkan Password Lagi <span class="symbol-required"></span></span>
+                            </div>
+                        <?php else : ?>
+                            <div class="container-login100-form-btn">
+                                <h1 class="text-info"><?= $valid ?></h1>
+                            </div>
+                        <?php endif ?>
+                    <?php endif ?>
                     <br>
-                    <div class="container-login100-form-btn">
-                        <button class="login100-form-btn">
-                            Login
-                        </button>
-                    </div>
+                    <?php if ($mode == 'token' || ($mode == 'reset' && $valid === true)) : ?>
+                        <div class="container-login100-form-btn">
+                            <button class="login100-form-btn">
+                                <?= $mode == 'token' ? 'Send Email' : 'Reset Password' ?>
+                            </button>
+                        </div>
+                    <?php endif ?>
                     <p class="text-danger"><?= $message ?></p>
 
                 </form>
-
-
                 <div class="login100-more" style="background-image: url('<?= assets_url('img/background/bg-login.jpg') ?>');">
                 </div>
             </div>

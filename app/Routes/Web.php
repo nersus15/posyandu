@@ -4,6 +4,10 @@ use Config\Services;
 
 $routes = Services::routes();
 // $routes->setAutoRoute(true);
+$routes->get('forgot/password', 'User::forgot_password', ['filter' => 'NoLogin']);
+$routes->get('reset/password/(:any)', 'User::reset_password/$1', ['filter' => 'NoLogin']);
+$routes->post('ws/user/sendtoken', 'Ws\User::send_token', ['filter' => 'NoLogin']);
+$routes->post('ws/user/reset', 'Ws\User::reset_password', ['filter' => 'NoLogin']);
 
 $routes->get('dashboard', 'Home::dashboard', ['filter' => 'MustLogin']);
 $routes->get('profile', 'Home::profile', ['filter' => 'MustLogin']);
