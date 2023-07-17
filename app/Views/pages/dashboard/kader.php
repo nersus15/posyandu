@@ -18,7 +18,7 @@
     <div class="col-sm-12 col-md-6">
         <div class="card" style="background-color: #E2F6CA;">
             <div style="display: flex; justify-content: space-between;" class="card-body">
-                <h2>Jumlah Anak</h2>
+                <h2>Jumlah Bayi/Balita</h2>
                 <h2><?= $jml_bayi ?></h2>
             </div>
         </div>
@@ -26,7 +26,7 @@
     <div class="col-sm-12 col-md-6">
         <div class="card bg" style="background-color: #F8FDCF;">
             <div style="display: flex; justify-content: space-between;" class="card-body">
-                <h2>Pemeriksaan Anak</h2>
+                <h2>Pemeriksaan Bayi/Balita</h2>
                 <h2><?= $periksa_anak ?></h2>
             </div>
         </div>

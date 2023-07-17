@@ -38,7 +38,7 @@ class Anak extends BaseController
         $wilayah = array_combine(array_column($wilayah, 'id'), array_column($wilayah, 'nama'));
         $data = [
             'dataHeader' => [
-                'title' => 'Data Anak' . ($textUmur ?? ''),
+                'title' => 'Data Bayi/Balita' . ($textUmur ?? ''),
                 'extra_js' => [
                     "vendor/adminlte/plugins/datatables/jquery.dataTables.min.js",
                     "vendor/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js",
@@ -221,7 +221,7 @@ class Anak extends BaseController
         }
         $data = [
             'dataHeader' => [
-                'title' => (empty($id) ? 'Tambah' : 'Update') . ' Data Anak',
+                'title' => (empty($id) ? 'Tambah' : 'Update') . ' Data Bayi/Balita',
                 'extra_js' => [
                     'vendor/adminlte/plugins/moment/moment.min.js',
                     "vendor/adminlte/plugins/daterangepicker/daterangepicker.js",
@@ -288,7 +288,7 @@ class Anak extends BaseController
         }
         $data = [
             'dataHeader' => [
-                'title' => 'Data Kunjungan anak',
+                'title' => 'Data Kunjungan bayi/balita',
                 'extra_js' => [
                     "vendor/adminlte/plugins/datatables/jquery.dataTables.min.js",
                     "vendor/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js",
