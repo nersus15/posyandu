@@ -146,7 +146,7 @@ foreach ($dataWil as $w) {
 </div>
 <script>
     $(document).ready(function() {
-        $('#kecamatan,#desa').select2();
+        $('#kecamatan,#desa, #kecamatan_kerja,#desa_kerja').select2();
         var loadFile = function(event) {
             var image = document.getElementById("output");
             image.src = URL.createObjectURL(event.target.files[0]);
