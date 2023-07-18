@@ -28,17 +28,17 @@ class Email extends BaseConfig
     /**
      * SMTP Server Address
      */
-    public string $SMTPHost = 'smtp.googlemail.com';
+    public string $SMTPHost = 'mail.kamscode.my.id';
 
     /**
      * SMTP Username
      */
-    public string $SMTPUser = '';
+    public string $SMTPUser = 'posyandu@kamscode.my.id';
 
     /**
      * SMTP Password
      */
-    public string $SMTPPass = '';
+    public string $SMTPPass = 'kamscode.dev';
 
     /**
      * SMTP Port

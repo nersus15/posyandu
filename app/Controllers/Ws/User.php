@@ -59,10 +59,8 @@ class User extends BaseController
 
         $emailSender = \Config\Services::email();
 
-        $emailSender->setFrom('', 'Sistem Informasi Pelayanan Posyandu');
+        $emailSender->setFrom('posyandu@kamscode.my.id', 'Sistem Informasi Pelayanan Posyandu');
         $emailSender->setTo($email);
-        $emailSender->setCC('another@another-example.com');
-        $emailSender->setBCC('them@their-example.com');
 
         $emailSender->setSubject('Reset Password');
         $emailSender->setMessage('<p>Berikut ini adalah Token untuk mereset password anda: <b>' . $token . '</b></p> <br><p>Atau anda juga bisa reset password anda dengan klik link berikut: <br><a href="' . base_url('reset/password/' . $token) . '">'. base_url('reset/password/' . $token) .'</a></p> <br> <p>Untuk diperhatikan, Token akan kadaluarsa dalam <b>30 Menit </b></p>');
