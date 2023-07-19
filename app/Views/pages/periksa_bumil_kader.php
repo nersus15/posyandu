@@ -14,7 +14,8 @@ if (empty($data)) {
         'fundus' => null,
         'usia_hamil' => null,
         'ttd' => null,
-        'hb' => null
+        'hb' => null,
+        'pemeriksa' => sessiondata('login', 'nama_lengkap')
     ];
 }
 if (isset($dataKunjungan) && !empty($dataKunjungan)) {
@@ -46,6 +47,10 @@ if (isset($dataKunjungan) && !empty($dataKunjungan)) {
                         <div class="form-group">
                             <label for="">Tanggal Periksa <span class="symbol-required"></span></label>
                             <input type="text" name="tgl" value="<?= $data['tgl'] ?>" id="kunjungan" class="form-control datemask" data-inputmask-alias="datetime" data-inputmask-inputformat="yyyy-mm-dd" data-mask>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Nama Pemeriksa <span class="symbol-required"></span></label>
+                            <input type="text" name="pemeriksa" required value="<?= $data['pemeriksa'] ?>" id="pemeriksa" class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="">Usia Kehamilan (hari)</label>

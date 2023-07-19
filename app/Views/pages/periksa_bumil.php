@@ -29,7 +29,8 @@ if (empty($data)) {
         'kondisi_rumah' =>  null,
         'persediaan' =>  null,
         'posyandu' =>  null,
-        'dukun' => null
+        'dukun' => null,
+        'pemeriksa' => null
     ];
 }
 if (isset($dataKunjungan) && !empty($dataKunjungan)) {
@@ -59,9 +60,17 @@ if (isset($dataKunjungan) && !empty($dataKunjungan)) {
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
+                            <label for="">Nama Pemeriksa <span class="symbol-required"></span></label>
+                            <input type="text" name="pemeriksa" required value="<?= $data['pemeriksa'] ?>" id="pemeriksa" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
                             <label for="">Posyandu</label>
                             <input type="text" name="posyandu" value="<?= $data['posyandu'] ?>" id="posyandu" class="form-control">
                         </div>
+                    </div>
+                    <div class="col-12">
                         <div class="form-group">
                             <label for="">Dukun</label>
                             <input type="text" name="dukun" value="<?= $data['dukun'] ?>" id="dukun" class="form-control">

@@ -95,7 +95,7 @@ class AnakModel extends Model
             $onJoinKunjungan .= ' AND `kunjungan_anak`.`bulan` LIKE "' . $tahun . '%"';
         }
         $q = $this->db->table('anak')
-            ->select('anak.*, kunjungan_anak.bulan, kunjungan_anak.berat, kunjungan_anak.tinggi, w1.nama kecamatan, w2.nama desa, kunjungan_anak.id idkunjungan')
+            ->select('anak.*, kunjungan_anak.nama_pemeriksa, kunjungan_anak.bulan, kunjungan_anak.berat, kunjungan_anak.tinggi, w1.nama kecamatan, w2.nama desa, kunjungan_anak.id idkunjungan')
             ->join('wilayah w1', 'w1.id = CONCAT(SUBSTR(anak.alamat, 1, 8), ".0000")', 'inner')
             ->join('wilayah w2', 'w2.id = anak.alamat', 'inner')
             ->join('kunjungan_anak', $onJoinKunjungan, 'left');
@@ -129,7 +129,8 @@ class AnakModel extends Model
                     $data[$v->id]['pemeriksaan'][$v->bulan] = [
                         'berat' => $v->berat,
                         'tinggi' => $v->tinggi,
-                        'id' => $v->idkunjungan
+                        'id' => $v->idkunjungan,
+                        'nama_pemeriksa' => $v->nama_pemeriksa
                     ];
                 }
             }

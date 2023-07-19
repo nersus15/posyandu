@@ -21,6 +21,7 @@ class KunjunganBumil extends Model
         'registrar',
         'gravida',
         'paritas',
+        'nama_pemeriksa',
         'abortus',
         'hidup',
         'hpht',

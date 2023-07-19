@@ -111,6 +111,7 @@ class Bumil extends BaseController
         if (is_login('kader')) {
             $headerDT = [
                 'Tanggal Periksa' => 'tgl_periksa',
+                'Nama Pemeriksa' => 'nama_pemeriksa',
                 'Bulan' => function ($rec) {
                     $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                     $bulan = intval(substr($rec['tgl_periksa'], 5, 7)) - 1;
@@ -137,6 +138,7 @@ class Bumil extends BaseController
         } elseif (is_login('bidan')) {
             $headerDT = [
                 'Tanggal' => 'dibuat',
+                'Nama Pemeriksa' => 'nama_pemeriksa',
                 'Obstetrik' => function ($rec) {
                     return 'Gravida: ' . $rec['gravida'] . '<br> Partus: ' . $rec['paritas'] . ' <br>Abortus: ' . $rec['abortus'] . ' <br>Hidup: ' . $rec['hidup'];
                 },

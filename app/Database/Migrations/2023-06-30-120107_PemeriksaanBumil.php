@@ -25,7 +25,7 @@ class PemeriksaanBumil extends Migration
             ],
             'tgl_periksa DATE NOT NULL DEFAULT current_timestamp',
             'dibuat DATE NOT NULL DEFAULT current_timestamp',
-            'registrar' => [
+            'nama_pemeriksa' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '46',
             ],

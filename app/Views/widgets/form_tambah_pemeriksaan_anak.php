@@ -1,7 +1,7 @@
 <?php
 $tahunIni = date('Y');
 $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-if(!isset($formid)) $formid = 'form-default';
+if (!isset($formid)) $formid = 'form-default';
 ?>
 <form id="<?= $formid ?>" action="<?= base_url() ?>" method="post">
     <div id="<?= 'modal-' . $formid ?>" class="modal" tabindex="-1" role="dialog">
@@ -15,6 +15,12 @@ if(!isset($formid)) $formid = 'form-default';
                 </div>
                 <div class="modal-body">
                     <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="">Nama Pemeriksa <span class="symbol-required"></span></label>
+                                <input type="text" name="pemeriksa" required id="pemeriksa" class="form-control">
+                            </div>
+                        </div>
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label for="">Pilih Tahun</label>

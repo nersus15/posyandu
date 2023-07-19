@@ -17,6 +17,10 @@ class KunjunganLansia extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '46',
             ],
+            'nama_pemeriksa' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '46',
+            ],
             'dibuat DATETIME NOT NULL DEFAULT current_timestamp',
             'lansia' => [
                 'type' => 'VARCHAR',

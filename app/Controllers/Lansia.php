@@ -251,8 +251,9 @@ class Lansia extends BaseController
                 $bulan = $tahunTerpilih . '-' . ($i < 10 ? '0' . $i : $i) . '-01';
                 $value = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['berat'] : null;
                 $idKunjungan = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['id'] : null;
-                
-                $icon = '<i style="font-size: 12px;cursor:pointer" data-kunjungan="'.$idKunjungan.'" data-bulan="'. $i .'" data-value="'. $value .'" data-tahun="'. $tahunTerpilih .'" data-lansia="'. $lansia .'" class="text-warning ml-2 edit-kunjungan-lansia fas fa-pencil-alt" aria-hidden="true"></i>';
+                $pemeriksa = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['nama_pemeriksa'] : sessiondata('login', 'nama_lengkap');
+
+                $icon = '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="'. $pemeriksa .'" data-kunjungan="'.$idKunjungan.'" data-bulan="'. $i .'" data-value="'. $value .'" data-tahun="'. $tahunTerpilih .'" data-lansia="'. $lansia .'" class="text-warning ml-2 edit-kunjungan-lansia fas fa-pencil-alt" aria-hidden="true"></i>';
                 if(date('Y') == $tahunTerpilih && $i > date('m'))
                     $icon = null;
 
@@ -340,7 +341,8 @@ class Lansia extends BaseController
                 'dibuat' => waktu(),
                 'bulan' => $date,
                 'lansia' => $post['lansia'],
-                'berat' => intval($post['berat'])
+                'berat' => intval($post['berat']),
+                'nama_pemeriksa' => $post['pemeriksa']
             ]);
             $message = 'Berhasil menambah data pemeriksaan Lansia';
         }
@@ -364,7 +366,8 @@ class Lansia extends BaseController
         
         if(empty($message)){
             $db->table('kunjungan_lansia')->where('id', $kunjungan)->update([
-                'berat' => intval($post['berat'])
+                'berat' => intval($post['berat']),
+                'nama_pemeriksa' => $post['pemeriksa']
             ]);
             $message = 'Berhasil merubah data pemeriksaan Lansia';
         }

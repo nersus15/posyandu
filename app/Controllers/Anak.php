@@ -278,8 +278,9 @@ class Anak extends BaseController
                 $berat = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['berat'] : '-';
                 $tinggi = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['tinggi'] : '-';
                 $idKunjungan = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['id'] : null;
+                $pemeriksa = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['nama_pemeriksa'] : sessiondata('login', 'nama_lengkap');
                 $value = $berat . '/' . $tinggi;
-                $icon = '<i style="font-size: 12px;cursor:pointer" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . ($value == '-/-' ? null : $value) . '" data-tahun="' . $tahunTerpilih . '" data-anak="' . $anak . '" class="text-warning ml-2 edit-kunjungan-anak fas fa-pencil-alt" aria-hidden="true"></i>';
+                $icon = '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="'.$pemeriksa.'" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . ($value == '-/-' ? null : $value) . '" data-tahun="' . $tahunTerpilih . '" data-anak="' . $anak . '" class="text-warning ml-2 edit-kunjungan-anak fas fa-pencil-alt" aria-hidden="true"></i>';
                 if ($value != '-/-') {
                     $icon .= '<i style="font-size: 12px;cursor:pointer" data-kunjungan="' . $idKunjungan . '" class="text-danger ml-2 hapus-kunjungan-anak fas fa-trash-alt" aria-hidden="true"></i>';
                 }
@@ -365,6 +366,7 @@ class Anak extends BaseController
                 'bulan' => $date,
                 'anak' => $post['anak'],
                 'berat' => intval($post['berat']),
+                'nama_pemeriksa' => $post['pemeriksa'],
                 'tinggi' => intval($post['tinggi'])
             ]);
             $message = 'Berhasil menambah data pemeriksaan Anak';
@@ -389,7 +391,9 @@ class Anak extends BaseController
         
         if(empty($message)){
             $db->table('kunjungan_anak')->where('id', $kunjungan)->update([
-                'berat' => intval($post['berat'])
+                'berat' => intval($post['berat']),
+                'tinggi' => intval($post['tinggi']),
+                'nama_pemeriksa' => $post['pemeriksa']
             ]);
             $message = 'Berhasil merubah data pemeriksaan Anak';
         }

@@ -18,6 +18,7 @@ $(document).ready(function(){
         var kunjungan = ini.data('kunjungan');
         var berat = value ? value.split('/')[0] : null;
         var tinggi = value ? value.split('/')[1] : null;
+        var pemeriksa = ini.data('pemeriksa');
 
         console.log(bulan, tahun, anak);
         form.append('<input type="hidden" name="bulan_act" value="'+ bulan +'">')
@@ -28,6 +29,7 @@ $(document).ready(function(){
         form.attr('action', basepath + (value ? ("kunjungan/anak/set/" + kunjungan) : "kunjungan/anak/save"))
         form.find('#berat').val(berat);
         form.find('#tinggi').val(tinggi);
+        form.find('#pemeriksa').val(pemeriksa);
         modal.modal('show');
     });
     $(".hapus-kunjungan-anak").click(function(){

@@ -36,6 +36,7 @@ class Forms extends BaseConfig{
 
     public array $periksa_bumil_bidan = [
         'tgl' => 'tgl_periksa',
+        'pemeriksa' => 'nama_pemeriksa',
         'gravida' => 'gravida',
         'paritas' => 'paritas',
         'abortus' => 'paritas',
@@ -63,6 +64,7 @@ class Forms extends BaseConfig{
 
     public $periksa_bumil_kader = [
         'tgl' => 'tgl_periksa',
+        'pemeriksa' => 'nama_pemeriksa',
         'gravida' => 'gravida',
         'paritas' => 'paritas',
         'abortus' => 'paritas',

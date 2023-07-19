@@ -57,7 +57,7 @@ class LansiaModel extends Model
             $onJoinKunjungan .= ' AND `kunjungan_lansia`.`bulan` LIKE "' . $tahun . '%"';
         }
         $q = $this->db->table('lansia')
-            ->select('lansia.*, kunjungan_lansia.bulan, kunjungan_lansia.berat, w1.nama kecamatan, w2.nama desa, kunjungan_lansia.id idkunjungan')
+            ->select('lansia.*, kunjungan_lansia.nama_pemeriksa, kunjungan_lansia.bulan, kunjungan_lansia.berat, w1.nama kecamatan, w2.nama desa, kunjungan_lansia.id idkunjungan')
             ->join('wilayah w1', 'w1.id = CONCAT(SUBSTR(lansia.alamat, 1, 8), ".0000")', 'inner')
             ->join('wilayah w2', 'w2.id = lansia.alamat', 'inner')
             ->join('kunjungan_lansia', $onJoinKunjungan, 'left');
@@ -89,7 +89,8 @@ class LansiaModel extends Model
                 if(!empty($v->bulan)){
                     $data[$v->id]['pemeriksaan'][$v->bulan] = [
                         'berat' => $v->berat,
-                        'id' => $v->idkunjungan
+                        'id' => $v->idkunjungan,
+                        'nama_pemeriksa' => $v->nama_pemeriksa
                     ];
                 }
             }

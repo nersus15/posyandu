@@ -17,6 +17,10 @@ class KunjunganAnak extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '46',
             ],
+            'nama_pemeriksa' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '46',
+            ],
             'dibuat DATETIME NOT NULL DEFAULT current_timestamp',
             'anak' => [
                 'type' => 'VARCHAR',
