@@ -117,7 +117,7 @@ class Home extends BaseController
         unset($post['kecamatan'], $post['desa']);
         $files = $this->request->getFiles();
         try {
-            if (isset($files['photo'])) {
+            if (isset($files['photo']) && $_FILES['photo']['size'] > 0) {
                 $img = $this->request->getFile('photo');
                 $nama = random(8) . '.' . getExt($img->getName(), true);
                 if (!$img->hasMoved()) {
@@ -125,6 +125,8 @@ class Home extends BaseController
                     new File($filepath);
                 }
                 $post['photo'] = $nama;
+            }else{
+                $post['photo'] = sessiondata('login', 'photo');
             }
             $userModel->update($username, $post);
         } catch (\Throwable $th) {
@@ -132,7 +134,7 @@ class Home extends BaseController
         }
 
         $session = session();
-        $session->set('login', $post + ['username' => $username]);
+        $session->set('login', $post + ['username' => $username, 'role' => sessiondata('login', 'role')]);
         return redirect()->to('profile')->with('response', 'Berhasil memperbarui profile');
     }
 }

@@ -239,26 +239,29 @@ class Lansia extends BaseController
         $wilayahModel = new WilayahModel();
         $wilayah = $wilayahModel->findAll();
         $wilayah = array_combine(array_column($wilayah, 'id'), array_column($wilayah, 'nama'));
-        
+
         $map = [
             'nama',
             'alamat',
-            'ttl',
+            function ($rec) {
+                $estimasi = $rec['estimasi_ttl'] == 1 ? '<span class="badge bg-info">Estimasi</span>' : '';
+                return $rec['tanggal_lahir'] . $estimasi;
+            },
             'nik',
         ];
         for ($i = 1; $i <= 12; $i++) {
-            $map[] = function ($rec) use($i, $tahunTerpilih, $lansia) {
+            $map[] = function ($rec) use ($i, $tahunTerpilih, $lansia) {
                 $bulan = $tahunTerpilih . '-' . ($i < 10 ? '0' . $i : $i) . '-01';
                 $value = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['berat'] : null;
                 $idKunjungan = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['id'] : null;
                 $pemeriksa = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['nama_pemeriksa'] : sessiondata('login', 'nama_lengkap');
 
-                $icon = '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="'. $pemeriksa .'" data-kunjungan="'.$idKunjungan.'" data-bulan="'. $i .'" data-value="'. $value .'" data-tahun="'. $tahunTerpilih .'" data-lansia="'. $lansia .'" class="text-warning ml-2 edit-kunjungan-lansia fas fa-pencil-alt" aria-hidden="true"></i>';
-                if(date('Y') == $tahunTerpilih && $i > date('m'))
+                $icon = '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="' . $pemeriksa . '" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . $value . '" data-tahun="' . $tahunTerpilih . '" data-lansia="' . $lansia . '" class="text-warning ml-2 edit-kunjungan-lansia fas fa-pencil-alt" aria-hidden="true"></i>';
+                if (date('Y') == $tahunTerpilih && $i > date('m'))
                     $icon = null;
 
-                if(!is_null($value)){
-                    $icon .= '<i style="font-size: 12px;cursor:pointer" data-kunjungan="'.$idKunjungan.'" class="text-danger ml-2 hapus-kunjungan-lansia fas fa-trash-alt" aria-hidden="true"></i>';
+                if (!is_null($value)) {
+                    $icon .= '<i style="font-size: 12px;cursor:pointer" data-kunjungan="' . $idKunjungan . '" class="text-danger ml-2 hapus-kunjungan-lansia fas fa-trash-alt" aria-hidden="true"></i>';
                 }
                 return ($value) . $icon;
             };
@@ -324,17 +327,17 @@ class Lansia extends BaseController
     {
         $post = $this->request->getPost();
         $message = null;
-        if(!c_isset($post, 'lansia') || empty($post['lansia']))
+        if (!c_isset($post, 'lansia') || empty($post['lansia']))
             $message = 'ID Lansia INVALID';
 
         $db = \Config\Database::connect();
         $date = waktu(strtotime(($post['tahun'] ?? $post['tahun_act']) . '-' . ($post['bulan'] ?? $post['bulan_act']) . '-01'), MYSQL_DATE_FORMAT);
         $kunjungan = $db->table('kunjungan_lansia')->where('lansia', $post['lansia'])->where('bulan', $date)->select('*')->get()->getResult();
-        
-        if(!empty($kunjungan))
+
+        if (!empty($kunjungan))
             $message = 'Pemeriksaan untuk bulan ' . substr($date, 0, 7) . ' sudah dilakukan';
 
-        if(empty($message)){
+        if (empty($message)) {
             $db->table('kunjungan_lansia')->insert([
                 'id' => random(8),
                 'registrar' => sessiondata('login', 'username'),
@@ -355,16 +358,16 @@ class Lansia extends BaseController
     {
         $post = $this->request->getPost();
         $message = null;
-        if(!c_isset($post, 'lansia') || empty($post['lansia']))
+        if (!c_isset($post, 'lansia') || empty($post['lansia']))
             $message = 'ID Lansia INVALID';
 
         $db = \Config\Database::connect();
         $dataKunjungan = $db->table('kunjungan_lansia')->where('id', $kunjungan)->get()->getResult();
-        
-        if(empty($dataKunjungan))
+
+        if (empty($dataKunjungan))
             $message = 'Data kunjungan tidak ditemukan';
-        
-        if(empty($message)){
+
+        if (empty($message)) {
             $db->table('kunjungan_lansia')->where('id', $kunjungan)->update([
                 'berat' => intval($post['berat']),
                 'nama_pemeriksa' => $post['pemeriksa']
@@ -379,18 +382,18 @@ class Lansia extends BaseController
         $session = session();
         $message = 'Data pemeriksaan berhasil dihapus';
         $berhasil = true;
-        if(!isset($post['kunjungan'])){
-           $message = 'ID pemeriksaan invalid'; 
-           $berhasil = false;
+        if (!isset($post['kunjungan'])) {
+            $message = 'ID pemeriksaan invalid';
+            $berhasil = false;
         }
         $db = \Config\Database::connect();
         $kunjungan = $db->table('kunjungan_lansia')->where('id', $post['kunjungan'])->get()->getResult();
-        if(empty($kunjungan)){
-           $message = 'Data pemeriksaan tidak ditemukan';
-           $berhasil = false;
+        if (empty($kunjungan)) {
+            $message = 'Data pemeriksaan tidak ditemukan';
+            $berhasil = false;
         }
 
-        if($berhasil){
+        if ($berhasil) {
             $db->table('kunjungan_lansia')->where('id', $post['kunjungan'])->delete();
             $session->setFlashdata(['response' => $message]);
         }

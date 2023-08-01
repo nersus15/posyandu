@@ -34,7 +34,7 @@
 <script>
     $(document).ready(function(){
         var tahunTerpilih = <?= $tahunTerpilih ?>;
-        var id = "<?= $id?>";
+        var id = "<?= $id??'' ?>";
         var callbackUrl = "<?= $callbackUrl ?>"
         $("#filter-tahun").change(function(){
             location.href = basepath + callbackUrl + id + '/' + $(this).val(); 
