@@ -72,7 +72,11 @@ class Bumil extends BaseController
                                 }
                                 return $data['ttl'] . $badge;
                             },
-                            'Alamat Domisili' => 'domisili',
+                            'Alamat Domisili' => function($rec) use($wilayah){
+                                $desa = $wilayah[$rec['domisili']];
+                                $kecamatan = $wilayah[substr($rec['alamat'], 0, 8) . '.0000'];
+                                return (empty($desa) ? '' :  'Desa ' . $desa .', ') . 'Kec. ' . $kecamatan;
+                            },
                             'Alamat' => function ($rec) use ($wilayah) {
                                 $desa = $wilayah[$rec['alamat']];
                                 $kecamatan = $wilayah[substr($rec['alamat'], 0, 8) . '.0000'];
@@ -144,7 +148,7 @@ class Bumil extends BaseController
                 },
                 'HPHT' => 'hpht',
                 'Taksiran <br> Persalinan' => 'hpl',
-                'Persalinan <br> Sebelumnya' => 'persalinan_sebelumnya',
+                'Persalinan <br> Sebelumnya' => 'persalinan_sebemulnya',
                 'BB' => function ($rec) {
                     return !empty($rec['bb']) ? $rec['bb'] . ' Kg' : '';
                 },
@@ -497,6 +501,73 @@ class Bumil extends BaseController
                 'bumil' => [
                     'view' => is_login('bidan') ? 'pages/periksa_bumil' : 'pages/periksa_bumil_kader',
                     'data' => ['dataKunjungan' => $dataKunjungan, 'ibu' => $ibu, 'mode' => empty($id) ? 'baru' : 'edit']
+                ]
+            ]
+        ];
+        return view('templates/adminlte', $data);
+    }
+
+    function laporan($tahun = null){
+        if(empty($tahun))
+            $tahun = date('Y');
+        // Load data Laporan
+        $dataLaporan = $this->bumilModel->getLaporan($tahun);
+        $map = [];
+
+        $data = [
+            'dataHeader' => [
+                'title' => 'Laporan Pemeriksaan Ibu Hamil Tahun ' . $tahun,
+                'extra_js' => [
+                    'vendor/adminlte/plugins/moment/moment.min.js',
+                    "vendor/adminlte/plugins/daterangepicker/daterangepicker.js",
+                    "vendor/adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js",
+                    'vendor/adminlte/plugins/inputmask/jquery.inputmask.min.js',
+                    "vendor/adminlte/plugins/datatables/jquery.dataTables.min.js",
+                    "vendor/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js",
+                    "vendor/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js",
+                    "vendor/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/dataTables.buttons.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js",
+                    "vendor/adminlte/plugins/jszip/jszip.min.js",
+                    "vendor/adminlte/plugins/pdfmake/pdfmake.min.js",
+                    "vendor/adminlte/plugins/pdfmake/vfs_fonts.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.html5.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.print.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js",
+
+                ],
+                'extra_css' => [
+                    'vendor/adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
+                    'vendor/adminlte/plugins/daterangepicker/daterangepicker.css'
+                ]
+            ],
+            'sidebarOpt' => [
+                'activeMenu' => 'report-bumil'
+            ],
+            'contents' => [
+                'filter' => [
+                    'view' => 'components/filter_tahun',
+                    'data' => ['tahunTerpilih' => $tahun, 'callbackUrl' => 'laporan/bumil']
+                ],
+                // 'button' => [
+                //     'view' => 'widgets/button-print',
+                //     'data' => []
+                // ],
+                'anak' => [
+                    'view' => 'components/datatables',
+                    'data' => [
+                        // 'buttons' => [
+                        //     [
+                        //         'text' => 'Tambah Data',
+                        //         'action' => load_script('pages/action_kunjungan_anak', ['anak' => $anak, 'formid' => 'form-pemeriksaan-anak'])
+                        //     ]
+                        // ],
+                        'desc' => '',
+                        'dtid' => 'dt-anak',
+                        'header' => 'widgets/header_laporan',
+                        'map' => $map,
+                        'data' => $dataLaporan
+                    ]
                 ]
             ]
         ];

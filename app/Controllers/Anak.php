@@ -79,6 +79,13 @@ class Anak extends BaseController
                                 return $key + 1;
                             },
                             'Nama' => 'nama',
+                            'Umur' => function($rec){
+                                $ttl = date_create($rec['ttl']);
+                                $sekarang = date_create();
+                                $diff = date_diff($ttl, $sekarang);
+
+                                return $diff->y . ' Tahun, ' . $diff->m . ' Bulan, ' . $diff->d . ' Hari';
+                            },
                             'L/P' => 'kelamin',
                             'BBL' => 'bbl',
                             'Ibu' => 'ibu',
@@ -255,11 +262,8 @@ class Anak extends BaseController
     {
         if (empty($tahun))
             $tahun = date('Y');
-
-        if (empty($tahunTerpilih)) {
-            $tahunTerpilih = date('Y');
-        }
-        $dataAnak = $this->anakModel->get_pemeriksaan(null, $anak, $tahunTerpilih);
+        
+        $dataAnak = $this->anakModel->get_pemeriksaan(null, $anak, $tahun);
         // echo json_encode($dataAnak);die;
         $session = session();
         $wilayahModel = new WilayahModel();
@@ -273,18 +277,18 @@ class Anak extends BaseController
             'ibu'
         ];
         for ($i = 1; $i <= 12; $i++) {
-            $map[] = function ($rec) use ($i, $tahunTerpilih, $anak) {
-                $bulan = $tahunTerpilih . '-' . ($i < 10 ? '0' . $i : $i) . '-01';
+            $map[] = function ($rec) use ($i, $tahun, $anak) {
+                $bulan = $tahun . '-' . ($i < 10 ? '0' . $i : $i) . '-01';
                 $berat = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['berat'] : '-';
                 $tinggi = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['tinggi'] : '-';
                 $idKunjungan = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['id'] : null;
-                $pemeriksa = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['nama_pemeriksa'] : sessiondata('login', 'nama_lengkap');
+                $pemeriksa = isset($rec['pemeriksaan'][$bulan]) ? ($rec['pemeriksaan'][$bulan]['nama_pemeriksa'] ?? '') : sessiondata('login', 'nama_lengkap');
                 $value = $berat . '/' . $tinggi;
-                $icon = '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="'.$pemeriksa.'" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . ($value == '-/-' ? null : $value) . '" data-tahun="' . $tahunTerpilih . '" data-anak="' . $anak . '" class="text-warning ml-2 edit-kunjungan-anak fas fa-pencil-alt" aria-hidden="true"></i>';
+                $icon = '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="'.$pemeriksa.'" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . ($value == '-/-' ? null : $value) . '" data-tahun="' . $tahun . '" data-anak="' . $anak . '" class="text-warning ml-2 edit-kunjungan-anak fas fa-pencil-alt" aria-hidden="true"></i>';
                 if ($value != '-/-') {
                     $icon .= '<i style="font-size: 12px;cursor:pointer" data-kunjungan="' . $idKunjungan . '" class="text-danger ml-2 hapus-kunjungan-anak fas fa-trash-alt" aria-hidden="true"></i>';
                 }
-                return date('Y') == $tahunTerpilih && $i > date('m') ? null : ($value . $icon);
+                return date('Y') == $tahun && $i > date('m') ? null : ($value . $icon);
             };
         }
         $data = [
@@ -316,11 +320,11 @@ class Anak extends BaseController
             'contents' => [
                 'filter' => [
                     'view' => 'components/filter_tahun',
-                    'data' => ['tahunTerpilih' => $tahunTerpilih, 'id' => $anak, 'callbackUrl' => 'anak/kunjungan/']
+                    'data' => ['tahunTerpilih' => $tahun, 'id' => $anak, 'callbackUrl' => 'anak/kunjungan/']
                 ],
                 'modal_tambah' => [
                     'view' => 'widgets/form_tambah_pemeriksaan_anak',
-                    'data' => ['tahun' => $tahunTerpilih, 'formid' => 'form-pemeriksaan-anak']
+                    'data' => ['tahun' => $tahun, 'formid' => 'form-pemeriksaan-anak']
                 ],
                 'anak' => [
                     'view' => 'components/datatables',

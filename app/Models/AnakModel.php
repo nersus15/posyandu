@@ -84,6 +84,7 @@ class AnakModel extends Model
         }else{
             $data = $this->where('registrar', sessiondata('login', 'username'))->findAll();
         }
+
         return $data;
     }
 
@@ -113,6 +114,7 @@ class AnakModel extends Model
                 $data[$v->id]['pemeriksaan'][$v->bulan]['berat'] = $v->berat;
                 $data[$v->id]['pemeriksaan'][$v->bulan]['tinggi'] = $v->tinggi;
                 $data[$v->id]['pemeriksaan'][$v->bulan]['id'] = $v->idkunjungan;
+                $data[$v->id]['pemeriksaan'][$v->bulan]['nama_pemeriksa'] = $v->nama_pemeriksa;
             }else{
                 $data[$v->id] = [
                     'id' => $v->id,

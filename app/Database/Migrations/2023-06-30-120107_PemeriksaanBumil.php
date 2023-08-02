@@ -13,6 +13,10 @@ class PemeriksaanBumil extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 8
             ],
+            'registrar' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '46',
+            ],
             'ibu' => [
                 'type' => 'VARCHAR',
                 'constraint' => 10

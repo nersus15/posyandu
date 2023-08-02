@@ -118,6 +118,35 @@ if (!isset($activeMenu))
             </ul>
           </li>
         <?php endif ?>
+        <li class="nav-item <?= in_array($activeMenu, ['report-bumil', 'report-anak', 'report-lansia']) ? 'menu-open' : '' ?>">
+            <a href="<?= base_url('laporan/bumil') ?>" class="nav-link <?= in_array($activeMenu, ['report-bumil', 'report-anak', 'report-lansia']) ? 'actaive' : '' ?>">
+              <i class="nav-icon far fa-peoples"></i>
+              <p>
+                Laporan
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview ml-3">
+              <li class="nav-item">
+                <a href="<?= base_url('laporan/bumil') ?>" class="nav-link <?= $activeMenu == 'report-bumil' ? 'active' : '' ?>">
+                  <!-- <i class="far fa-circle nav-icon"></i> -->
+                  <p>Ibu Hamil</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= base_url('laporan/anak') ?>" class="nav-link <?= $activeMenu == 'report-anak' ? 'active' : '' ?>">
+                  <!-- <i class="far fa-circle nav-icon"></i> -->
+                  <p>Bayi/Balita</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= base_url('laporan/lansia') ?>" class="nav-link <?= $activeMenu == 'report-lansia' ? 'active' : '' ?>">
+                  <!-- <i class="far fa-circle nav-icon"></i> -->
+                  <p>Lansia</p>
+                </a>
+              </li>
+            </ul>
+        </li>
         <li class="nav-header">Akun</li>
         <li class="nav-item">
           <a href="<?= base_url('ws/user/logout') ?>" class="nav-link">

@@ -75,3 +75,13 @@ $routes->get('/bidan', 'User::bidan', ['filter' => 'MustLogin:admin']);
 $routes->post('/user/set', 'User::set', ['filter' => 'MustLogin:admin']);
 $routes->get('/user/delete/(:any)', 'User::delete/$1', ['filter' => 'MustLogin:admin']);
 $routes->post('/user/save', 'User::save', ['filter' => 'MustLogin:admin']);
+
+
+// Laporan
+$routes->get('/laporan/bumil', 'Bumil::laporan', ['filter' => 'MustLogin']);
+$routes->get('/laporan/lansia', 'Lansia::laporan', ['filter' => 'MustLogin']);
+$routes->get('/laporan/anak', 'Anak::laporan', ['filter' => 'MustLogin']);
+$routes->get('/laporan/bumil/(:any)', 'Bumil::laporan/$1', ['filter' => 'MustLogin']);
+$routes->get('/laporan/lansia/(:any)', 'Lansia::laporan/$1', ['filter' => 'MustLogin']);
+$routes->get('/laporan/anak/(:any)', 'Anak::laporan/$1', ['filter' => 'MustLogin']);
+

@@ -73,4 +73,8 @@ class BumilModel extends Model
         return $this->join('users', 'bumil.registrar = users.username')
             ->like('wilayah_kerja', $prefWil, 'after')->select('bumil.*')->find();
     }
+
+    function getLaporan($tahun = 2023){
+        return  [];
+    }
 }
