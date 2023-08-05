@@ -72,7 +72,7 @@ if (isset($dataKunjungan) && !empty($dataKunjungan)) {
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <label for="">Dukun</label>
+                            <label for="">Nama Dukun</label>
                             <input type="text" name="dukun" value="<?= $data['dukun'] ?>" id="dukun" class="form-control">
                         </div>
                     </div>

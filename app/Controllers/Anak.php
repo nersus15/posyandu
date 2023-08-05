@@ -79,7 +79,7 @@ class Anak extends BaseController
                                 return $key + 1;
                             },
                             'Nama' => 'nama',
-                            'Umur' => function($rec){
+                            'Umur' => function ($rec) {
                                 $ttl = date_create($rec['ttl']);
                                 $sekarang = date_create();
                                 $diff = date_diff($ttl, $sekarang);
@@ -262,7 +262,7 @@ class Anak extends BaseController
     {
         if (empty($tahun))
             $tahun = date('Y');
-        
+
         $dataAnak = $this->anakModel->get_pemeriksaan(null, $anak, $tahun);
         // echo json_encode($dataAnak);die;
         $session = session();
@@ -284,7 +284,7 @@ class Anak extends BaseController
                 $idKunjungan = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['id'] : null;
                 $pemeriksa = isset($rec['pemeriksaan'][$bulan]) ? ($rec['pemeriksaan'][$bulan]['nama_pemeriksa'] ?? '') : sessiondata('login', 'nama_lengkap');
                 $value = $berat . '/' . $tinggi;
-                $icon = '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="'.$pemeriksa.'" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . ($value == '-/-' ? null : $value) . '" data-tahun="' . $tahun . '" data-anak="' . $anak . '" class="text-warning ml-2 edit-kunjungan-anak fas fa-pencil-alt" aria-hidden="true"></i>';
+                $icon = '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="' . $pemeriksa . '" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . ($value == '-/-' ? null : $value) . '" data-tahun="' . $tahun . '" data-anak="' . $anak . '" class="text-warning ml-2 edit-kunjungan-anak fas fa-pencil-alt" aria-hidden="true"></i>';
                 if ($value != '-/-') {
                     $icon .= '<i style="font-size: 12px;cursor:pointer" data-kunjungan="' . $idKunjungan . '" class="text-danger ml-2 hapus-kunjungan-anak fas fa-trash-alt" aria-hidden="true"></i>';
                 }
@@ -352,17 +352,17 @@ class Anak extends BaseController
     {
         $post = $this->request->getPost();
         $message = null;
-        if(!c_isset($post, 'anak') || empty($post['anak']))
+        if (!c_isset($post, 'anak') || empty($post['anak']))
             $message = 'ID Anak INVALID';
 
         $db = \Config\Database::connect();
         $date = waktu(strtotime(($post['tahun'] ?? $post['tahun_act']) . '-' . ($post['bulan'] ?? $post['bulan_act']) . '-01'), MYSQL_DATE_FORMAT);
         $kunjungan = $db->table('kunjungan_anak')->where('anak', $post['anak'])->where('bulan', $date)->select('*')->get()->getResult();
-        
-        if(!empty($kunjungan))
+
+        if (!empty($kunjungan))
             $message = 'Pemeriksaan untuk bulan ' . substr($date, 0, 7) . ' sudah dilakukan';
 
-        if(empty($message)){
+        if (empty($message)) {
             $db->table('kunjungan_anak')->insert([
                 'id' => random(8),
                 'registrar' => sessiondata('login', 'username'),
@@ -384,16 +384,16 @@ class Anak extends BaseController
     {
         $post = $this->request->getPost();
         $message = null;
-        if(!c_isset($post, 'anak') || empty($post['anak']))
+        if (!c_isset($post, 'anak') || empty($post['anak']))
             $message = 'ID Anak INVALID';
 
         $db = \Config\Database::connect();
         $dataKunjungan = $db->table('kunjungan_anak')->where('id', $kunjungan)->get()->getResult();
-        
-        if(empty($dataKunjungan))
+
+        if (empty($dataKunjungan))
             $message = 'Data kunjungan tidak ditemukan';
-        
-        if(empty($message)){
+
+        if (empty($message)) {
             $db->table('kunjungan_anak')->where('id', $kunjungan)->update([
                 'berat' => intval($post['berat']),
                 'tinggi' => intval($post['tinggi']),
@@ -409,21 +409,111 @@ class Anak extends BaseController
         $session = session();
         $message = 'Data pemeriksaan berhasil dihapus';
         $berhasil = true;
-        if(!isset($post['kunjungan'])){
-           $message = 'ID pemeriksaan invalid'; 
-           $berhasil = false;
+        if (!isset($post['kunjungan'])) {
+            $message = 'ID pemeriksaan invalid';
+            $berhasil = false;
         }
         $db = \Config\Database::connect();
         $kunjungan = $db->table('kunjungan_anak')->where('id', $post['kunjungan'])->get()->getResult();
-        if(empty($kunjungan)){
-           $message = 'Data pemeriksaan tidak ditemukan';
-           $berhasil = false;
+        if (empty($kunjungan)) {
+            $message = 'Data pemeriksaan tidak ditemukan';
+            $berhasil = false;
         }
 
-        if($berhasil){
+        if ($berhasil) {
             $db->table('kunjungan_anak')->where('id', $post['kunjungan'])->delete();
             $session->setFlashdata(['response' => $message]);
         }
         return $this->response->setJSON(['message' => $message, 'type' => $berhasil ? 'success' : 'error']);
+    }
+
+    function laporan($tahun = null)
+    {
+        if (empty($tahun))
+            $tahun = date('Y');
+        // Load data Laporan
+        $dataLaporan = $this->anakModel->getLaporan($tahun);
+        $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $header = [
+            'Nama Ibu' => 'ibu',
+            'Nama Balita' => 'nama',
+            'Umur' => 'umur',
+            'JK' => 'kelamin',
+            'Alamat' => 'alamat',
+            'Pemeriksaan <br> TB/BB' => 'hasil'
+        ];
+        $tahunSekarang = date('Y');
+        $tabContent = [];
+        foreach ($daftarBulan as $k => $bulan) {
+            if ($tahun == $tahunSekarang && ($k + 1) > intval(date('m'))) continue;
+
+            $tabContent[$bulan] = [
+                'active' => $tahun == $tahunSekarang ? ($k + 1) == intval(date('m')) : $k == 0,
+                'view' => 'components/datatables',
+                'badge' => '<span class="badge badge-pill badge-danger">' . count($dataLaporan[$k + 1]) . '</span>',
+                'data' => [
+                    'desc' => 'Laporan Untuk Balita yang Posyandu pada Bulan ' . $bulan . ' ' . $tahun,
+                    'dtid' => 'dt-laporan-bumil-' . $bulan,
+                    'header' => $header,
+                    'data' => $dataLaporan[$k + 1],
+                    'actions' => [],
+                    'buttons' => [
+                        [
+                            'extend' => 'print',
+                            'text' => 'Buat Pdf',
+                            'title' => 'Laporan  Untuk Balita yang Posyandu pada Bulan ' . $bulan . ' ' . $tahun,
+                        ]
+                    ]
+                ]
+            ];
+        }
+        $data = [
+            'dataHeader' => [
+                'title' => 'Laporan Pemeriksaan Bayi/Balita Tahun ' . $tahun,
+                'extra_js' => [
+                    'vendor/adminlte/plugins/moment/moment.min.js',
+                    "vendor/adminlte/plugins/daterangepicker/daterangepicker.js",
+                    "vendor/adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js",
+                    'vendor/adminlte/plugins/inputmask/jquery.inputmask.min.js',
+                    "vendor/adminlte/plugins/datatables/jquery.dataTables.min.js",
+                    "vendor/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js",
+                    "vendor/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js",
+                    "vendor/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/dataTables.buttons.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js",
+                    "vendor/adminlte/plugins/jszip/jszip.min.js",
+                    "vendor/adminlte/plugins/pdfmake/pdfmake.min.js",
+                    "vendor/adminlte/plugins/pdfmake/vfs_fonts.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.html5.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.print.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js",
+
+                ],
+                'extra_css' => [
+                    'vendor/adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
+                    'vendor/adminlte/plugins/daterangepicker/daterangepicker.css'
+                ]
+            ],
+            'sidebarOpt' => [
+                'activeMenu' => 'report-anak'
+            ],
+            'contents' => [
+                'filter' => [
+                    'view' => 'components/filter_tahun',
+                    'data' => ['tahunTerpilih' => $tahun, 'callbackUrl' => 'laporan/anak']
+                ],
+                // 'button' => [
+                //     'view' => 'widgets/button-print',
+                //     'data' => []
+                // ],
+                'anak' => [
+                    'view' => 'components/tabs',
+                    'data' => [
+                        'contents' => $tabContent
+                    ]
+                ]
+            ]
+        ];
+        return view('templates/adminlte', $data);
     }
 }

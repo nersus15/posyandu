@@ -81,7 +81,7 @@ if (isset($dataKunjungan) && !empty($dataKunjungan)) {
                             <input type="number" name="hb" value="<?= $data['hb'] ?>" id="hb" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="">TTD BKS</label>
+                            <label for="">BJ</label>
                             <input type="text" name="ttd" value="<?= $data['ttd'] ?>" id="ttd" class="form-control">
                         </div>
                     </div>

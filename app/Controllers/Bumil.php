@@ -72,10 +72,10 @@ class Bumil extends BaseController
                                 }
                                 return $data['ttl'] . $badge;
                             },
-                            'Alamat Domisili' => function($rec) use($wilayah){
+                            'Alamat Domisili' => function ($rec) use ($wilayah) {
                                 $desa = $wilayah[$rec['domisili']];
                                 $kecamatan = $wilayah[substr($rec['alamat'], 0, 8) . '.0000'];
-                                return (empty($desa) ? '' :  'Desa ' . $desa .', ') . 'Kec. ' . $kecamatan;
+                                return (empty($desa) ? '' :  'Desa ' . $desa . ', ') . 'Kec. ' . $kecamatan;
                             },
                             'Alamat' => function ($rec) use ($wilayah) {
                                 $desa = $wilayah[$rec['alamat']];
@@ -121,14 +121,14 @@ class Bumil extends BaseController
                     $bulan = intval(substr($rec['tgl_periksa'], 5, 7)) - 1;
                     return $daftarBulan[$bulan] . ' ' . substr($rec['tgl_periksa'], 0, 4);
                 },
-                'Usia Kehamilan' => function($rec){
+                'Usia Kehamilan' => function ($rec) {
                     $usia = $rec['usia_kehamilan'];
-                    $bulan = floor($usia/30) . ' Bulan';
-                    $hari = $usia%30 . ' Hari';
+                    $bulan = floor($usia / 30) . ' Bulan';
+                    $hari = $usia % 30 . ' Hari';
                     return $bulan . ', ' . $hari;
                 },
                 'Hamil Ke' => 'gravida',
-                'TTD BKS' => 'ttd',
+                'BJ' => 'ttd',
                 'BB' => 'bb',
                 'TB' => 'tb',
                 'Tinggi Fundus' => 'fundus',
@@ -137,7 +137,7 @@ class Bumil extends BaseController
                 'Actions' => function ($rec) {
                     return '<div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/update/' . $rec['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/delete/' . $rec['id']) . '" class="btb btn-hapus-kunjungan-bumil btn-xs btn-danger">Delete</a></div>';
                 }
-                
+
             ];
         } elseif (is_login('bidan')) {
             $headerDT = [
@@ -507,13 +507,47 @@ class Bumil extends BaseController
         return view('templates/adminlte', $data);
     }
 
-    function laporan($tahun = null){
-        if(empty($tahun))
+    function laporan($tahun = null)
+    {
+        if (empty($tahun))
             $tahun = date('Y');
         // Load data Laporan
         $dataLaporan = $this->bumilModel->getLaporan($tahun);
-        $map = [];
+        $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $header = [
+            'Nama' => 'nama',
+            'Nama Suami' => 'suami',
+            'Tanggal Lahir' => 'ttl',
+            'Alamat' => 'alamat',
+            'Hamil Ke' => 'gravida',
+            'Usia Kehamilan' => 'usia_kehamilan',
+            'Pemeriksaan <br> TB/BB' => 'hasil'
+        ];
+        $tahunSekarang = date('Y');
+        $tabContent = [];
+        foreach ($daftarBulan as $k => $bulan) {
+            if ($tahun == $tahunSekarang && ($k + 1) > intval(date('m'))) continue;
 
+            $tabContent[$bulan] = [
+                'active' => $tahun == $tahunSekarang ? ($k + 1) == intval(date('m')) : $k == 0,
+                'view' => 'components/datatables',
+                'badge' => '<span class="badge badge-pill badge-danger">' . count($dataLaporan[$k + 1]) . '</span>',
+                'data' => [
+                    'desc' => 'Laporan Untuk Ibu Hamil ynag Posyandu pada Bulan ' . $bulan . ' ' . $tahun,
+                    'dtid' => 'dt-laporan-bumil-' . $bulan,
+                    'header' => $header,
+                    'data' => $dataLaporan[$k + 1],
+                    'actions' => [],
+                    'buttons' => [
+                        [
+                            'extend' => 'print',
+                            'text' => 'Buat Pdf',
+                            'title' => 'Laporan Untuk Ibu Hamil ynag Posyandu pada Bulan ' . $bulan . ' ' . $tahun,
+                        ]
+                    ]
+                ]
+            ];
+        }
         $data = [
             'dataHeader' => [
                 'title' => 'Laporan Pemeriksaan Ibu Hamil Tahun ' . $tahun,
@@ -554,19 +588,9 @@ class Bumil extends BaseController
                 //     'data' => []
                 // ],
                 'anak' => [
-                    'view' => 'components/datatables',
+                    'view' => 'components/tabs',
                     'data' => [
-                        // 'buttons' => [
-                        //     [
-                        //         'text' => 'Tambah Data',
-                        //         'action' => load_script('pages/action_kunjungan_anak', ['anak' => $anak, 'formid' => 'form-pemeriksaan-anak'])
-                        //     ]
-                        // ],
-                        'desc' => '',
-                        'dtid' => 'dt-anak',
-                        'header' => 'widgets/header_laporan',
-                        'map' => $map,
-                        'data' => $dataLaporan
+                        'contents' => $tabContent
                     ]
                 ]
             ]

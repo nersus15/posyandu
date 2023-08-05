@@ -399,4 +399,92 @@ class Lansia extends BaseController
         }
         return $this->response->setJSON(['message' => $message, 'type' => $berhasil ? 'success' : 'error']);
     }
+    function laporan($tahun = null)
+    {
+        if (empty($tahun))
+            $tahun = date('Y');
+        // Load data Laporan
+        $dataLaporan = $this->lansiaModel->getLaporan($tahun);
+        $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $header = [
+            'Nama' => 'nama',
+            'Tanggal Lahir' => 'ttl',
+            'Alamat' => 'alamat',
+            'NIK' => 'nik',
+            'Pemeriksaan BB' => 'hasil'
+        ];
+        $tahunSekarang = date('Y');
+        $tabContent = [];
+        foreach ($daftarBulan as $k => $bulan) {
+            if ($tahun == $tahunSekarang && ($k + 1) > intval(date('m'))) continue;
+
+            $tabContent[$bulan] = [
+                'active' => $tahun == $tahunSekarang ? ($k + 1) == intval(date('m')) : $k == 0,
+                'view' => 'components/datatables',
+                'badge' => '<span class="badge badge-pill badge-danger">' . count($dataLaporan[$k + 1]) . '</span>',
+                'data' => [
+                    'desc' => 'Laporan Untuk Lansia yang Posyandu pada Bulan ' . $bulan . ' ' . $tahun,
+                    'dtid' => 'dt-laporan-bumil-' . $bulan,
+                    'header' => $header,
+                    'data' => $dataLaporan[$k + 1],
+                    'actions' => [],
+                    'buttons' => [
+                        [
+                            'extend' => 'print',
+                            'text' => 'Buat Pdf',
+                            'title' => 'Laporan Untuk Lansia yang Posyandu pada Bulan ' . $bulan . ' ' . $tahun,
+                        ]
+                    ]
+                ]
+            ];
+        }
+        $data = [
+            'dataHeader' => [
+                'title' => 'Laporan Pemeriksaan Lanisa Tahun ' . $tahun,
+                'extra_js' => [
+                    'vendor/adminlte/plugins/moment/moment.min.js',
+                    "vendor/adminlte/plugins/daterangepicker/daterangepicker.js",
+                    "vendor/adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js",
+                    'vendor/adminlte/plugins/inputmask/jquery.inputmask.min.js',
+                    "vendor/adminlte/plugins/datatables/jquery.dataTables.min.js",
+                    "vendor/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js",
+                    "vendor/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js",
+                    "vendor/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/dataTables.buttons.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js",
+                    "vendor/adminlte/plugins/jszip/jszip.min.js",
+                    "vendor/adminlte/plugins/pdfmake/pdfmake.min.js",
+                    "vendor/adminlte/plugins/pdfmake/vfs_fonts.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.html5.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.print.min.js",
+                    "vendor/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js",
+
+                ],
+                'extra_css' => [
+                    'vendor/adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
+                    'vendor/adminlte/plugins/daterangepicker/daterangepicker.css'
+                ]
+            ],
+            'sidebarOpt' => [
+                'activeMenu' => 'report-lansia'
+            ],
+            'contents' => [
+                'filter' => [
+                    'view' => 'components/filter_tahun',
+                    'data' => ['tahunTerpilih' => $tahun, 'callbackUrl' => 'laporan/lansia']
+                ],
+                // 'button' => [
+                //     'view' => 'widgets/button-print',
+                //     'data' => []
+                // ],
+                'anak' => [
+                    'view' => 'components/tabs',
+                    'data' => [
+                        'contents' => $tabContent
+                    ]
+                ]
+            ]
+        ];
+        return view('templates/adminlte', $data);
+    }
 }

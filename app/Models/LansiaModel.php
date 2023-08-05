@@ -97,4 +97,39 @@ class LansiaModel extends Model
         }
         return $data;
     }
+    function getLaporan($tahun = 2023)
+    {
+        $wilayah = getWil();
+        $tmp = $this->select('lansia.id, lansia.nama, alamat, MONTH(kunjungan_lansia.bulan) bulan, tanggal_lahir ttl, nik, kunjungan_lansia.berat bb')
+            ->join('kunjungan_lansia', "kunjungan_lansia.lansia = lansia.id AND kunjungan_lansia.bulan LIKE '$tahun%'")
+            ->findAll();
+
+        $data = [];
+        $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        foreach($daftarBulan as $k => $bulan){
+            $data[$k + 1] = [];
+        }
+        foreach ($tmp as $v) {
+            $v = (object) $v;
+            $data[$v->bulan][$v->id] = [
+                'nama' => $v->nama,
+                'alamat' => $v->alamat,
+                'ttl' => $v->ttl,
+                'nik' => $v->nik,
+                'hasil' => $v->bb
+            ];
+        }
+
+        foreach ($data as $bulan => $d) {
+            foreach ($d as $key => $v) {
+                // Perbaiki Alamat
+                $alamat = $v['alamat'];
+                if (level_wilayah($alamat) == 3)
+                    $data[$bulan][$key]['alamat'] = 'Kec. ' . $wilayah['kecamatan'][$alamat];
+                elseif (level_wilayah($alamat) == 4)
+                    $data[$bulan][$key]['alamat'] = 'Desa ' . $wilayah['desa'][$alamat] . ', Kec.' . $wilayah['kecamatan'][substr($alamat, 0, 8) . '.0000'];
+            }
+        }
+        return  $data;
+    }
 }

@@ -68,13 +68,57 @@ class BumilModel extends Model
             'agama' => 'Islam'
         ];
     }
-    function getBYWilker($wilker){
+    function getBYWilker($wilker)
+    {
         $prefWil = prefiks_wilayah($wilker);
         return $this->join('users', 'bumil.registrar = users.username')
             ->like('wilayah_kerja', $prefWil, 'after')->select('bumil.*')->find();
     }
 
-    function getLaporan($tahun = 2023){
-        return  [];
+    function getLaporan($tahun = 2023)
+    {
+        $wilayah = getWil();
+        $tmp = $this->select('bumil.id, nama, nama_suami, alamat, MONTH(kunjungan_bumil.tgl_periksa) bulan, tanggal_lahir ttl, ttl_estimasi estimasi, kunjungan_bumil.gravida, kunjungan_bumil.usia_kehamilan, kunjungan_bumil.tb, kunjungan_bumil.bb')
+            ->join('kunjungan_bumil', "kunjungan_bumil.ibu = bumil.id AND kunjungan_bumil.tgl_periksa LIKE '$tahun%'")
+            ->findAll();
+
+        $data = [];
+        $tmp2 = [];
+
+        $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        foreach($daftarBulan as $k => $bulan){
+            $data[$k + 1] = [];
+        }
+        foreach ($tmp as $v) {
+            $v = (object) $v;
+            $usiaKehamilan = null;
+            if (!empty($v->usia_kehamilan)) {
+                $bulan = floor($v->usia_kehamilan / 30);
+                $hari = $v->usia_kehamilan % 30;
+                $usiaKehamilan = ($bulan >= 1 ? $bulan . ' Bulan, ' : '') . $hari . ' Hari';
+            }
+
+            $data[$v->bulan][$v->id] = [
+                'nama' => $v->nama,
+                'suami' => $v->nama_suami,
+                'alamat' => $v->alamat,
+                'ttl' => $v->ttl,
+                'gravida' => $v->gravida,
+                'usia_kehamilan' => $usiaKehamilan,
+                'hasil' => $v->tb . '/' . $v->bb
+            ];
+        }
+
+        foreach ($data as $bulan => $d) {
+            foreach ($d as $key => $v) {
+                // Perbaiki Alamat
+                $alamat = $v['alamat'];
+                if (level_wilayah($alamat) == 3)
+                    $data[$bulan][$key]['alamat'] = 'Kec. ' . $wilayah['kecamatan'][$alamat];
+                elseif (level_wilayah($alamat) == 4)
+                    $data[$bulan][$key]['alamat'] = 'Desa ' . $wilayah['desa'][$alamat] . ', Kec.' . $wilayah['kecamatan'][substr($alamat, 0, 8) . '.0000'];
+            }
+        }
+        return  $data;
     }
 }

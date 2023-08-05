@@ -824,6 +824,39 @@ if (!function_exists('fieldmapping')) {
         return $field;
     }
 }
+if(! function_exists('getWil')){
+    function getWil($level = null){
+        $db = \Config\Database::connect();
+
+        $q = $db->table('wilayah');
+        if(!is_null($level))
+            $q->where('level', $level);
+
+        $wilayah = $q->get()->getResult();
+        $wil = [
+            'desa' => [],
+            'kecamatan' => [],
+            'hirarki' => []
+        ];
+
+        foreach($wilayah as $w){
+            if($w->level == 3){
+                $wil['kecamatan'][$w->id] = $w->nama;
+                if(!isset($wil['hirarki'][$w->id])){
+                    $wil['hirarki'][$w->id] = [
+                        'nama' => $w->nama,
+                        'anak' => []
+                    ];                    
+                }
+            }elseif($w->level == 4){
+                $kec = substr($w->id, 0, 8) . '.0000';
+                $wil['desa'][$w->id] = $w->nama;
+                $wil['hirarki'][$kec]['anak'][$w->id] = $w->nama;
+            }
+        }
+        return $wil;
+    }
+}
 
 if (!function_exists('reversemapping')) {
     function reversemapping($config, $input, $defaultValue = array(), $petaNilai = array(), $batch = false)
