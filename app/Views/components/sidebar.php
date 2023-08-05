@@ -118,6 +118,7 @@ if (!isset($activeMenu))
             </ul>
           </li>
         <?php endif ?>
+        <?php if(is_login(['bidan', 'kader'])):?>
         <li class="nav-item <?= in_array($activeMenu, ['report-bumil', 'report-anak', 'report-lansia']) ? 'menu-open' : '' ?>">
             <a href="<?= base_url('laporan/bumil') ?>" class="nav-link <?= in_array($activeMenu, ['report-bumil', 'report-anak', 'report-lansia']) ? 'actaive' : '' ?>">
               <i class="nav-icon far fa-peoples"></i>
@@ -133,7 +134,7 @@ if (!isset($activeMenu))
                   <p>Ibu Hamil</p>
                 </a>
               </li>
-              <?php if(!is_login('bidan')): ?>
+              <?php if(is_login('kader')): ?>
                 <li class="nav-item">
                 <a href="<?= base_url('laporan/anak') ?>" class="nav-link <?= $activeMenu == 'report-anak' ? 'active' : '' ?>">
                   <!-- <i class="far fa-circle nav-icon"></i> -->
@@ -149,6 +150,7 @@ if (!isset($activeMenu))
               <?php endif ?>
             </ul>
         </li>
+        <?php endif ?>
         <li class="nav-header">Akun</li>
         <li class="nav-item">
           <a href="<?= base_url('ws/user/logout') ?>" class="nav-link">
