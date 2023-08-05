@@ -133,7 +133,8 @@ if (!isset($activeMenu))
                   <p>Ibu Hamil</p>
                 </a>
               </li>
-              <li class="nav-item">
+              <?php if(!is_login('bidan')): ?>
+                <li class="nav-item">
                 <a href="<?= base_url('laporan/anak') ?>" class="nav-link <?= $activeMenu == 'report-anak' ? 'active' : '' ?>">
                   <!-- <i class="far fa-circle nav-icon"></i> -->
                   <p>Bayi/Balita</p>
@@ -145,6 +146,7 @@ if (!isset($activeMenu))
                   <p>Lansia</p>
                 </a>
               </li>
+              <?php endif ?>
             </ul>
         </li>
         <li class="nav-header">Akun</li>
