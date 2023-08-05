@@ -514,15 +514,39 @@ class Bumil extends BaseController
         // Load data Laporan
         $dataLaporan = $this->bumilModel->getLaporan($tahun);
         $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        $header = [
-            'Nama' => 'nama',
-            'Nama Suami' => 'suami',
-            'Tanggal Lahir' => 'ttl',
-            'Alamat' => 'alamat',
-            'Hamil Ke' => 'gravida',
-            'Usia Kehamilan' => 'usia_kehamilan',
-            'Pemeriksaan <br> TB/BB' => 'hasil'
-        ];
+        $header = [];
+        if(is_login('bidan')){
+            $header = [
+                'Nama' => 'nama',
+                'Nama Suami' => 'suami',
+                'Tanggal Lahir' => 'ttl',
+                'Alamat' => 'alamat',
+                'Hamil Ke' => 'gravida',
+                'Usia Kehamilan' => 'usia_kehamilan',
+                'HPHT' => 'hpht',
+                'Taksiran <br> Persalinan' => 'hpl',
+                'Persalinan <br> Sebelumnya' => 'persalinan_sebemulnya',
+                'BB' => function ($rec) {
+                    return !empty($rec['bb']) ? $rec['bb'] . ' Kg' : '';
+                },
+                'TB' => function ($rec) {
+                    return !empty($rec['tb']) ? $rec['tb'] . ' cm' : '';
+                },
+                'Buku KIA' => function ($rec) {
+                    return $rec['buku_kia'] == '1' ? 'Memiliki' : 'Tidak Memiliki';
+                },
+            ];
+        }elseif(is_login('kader')){
+            $header = [
+                'Nama' => 'nama',
+                'Nama Suami' => 'suami',
+                'Tanggal Lahir' => 'ttl',
+                'Alamat' => 'alamat',
+                'Hamil Ke' => 'gravida',
+                'Usia Kehamilan' => 'usia_kehamilan',
+                'Pemeriksaan <br> TB/BB' => 'hasil'
+            ];
+        }
         $tahunSekarang = date('Y');
         $tabContent = [];
         foreach ($daftarBulan as $k => $bulan) {

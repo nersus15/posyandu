@@ -79,11 +79,12 @@ class BumilModel extends Model
     {
         $wilayah = getWil();
         $tmp = $this->select('bumil.id, nama, nama_suami, alamat, MONTH(kunjungan_bumil.tgl_periksa) bulan, tanggal_lahir ttl, ttl_estimasi estimasi, kunjungan_bumil.gravida, kunjungan_bumil.usia_kehamilan, kunjungan_bumil.tb, kunjungan_bumil.bb')
-            ->join('kunjungan_bumil', "kunjungan_bumil.ibu = bumil.id AND kunjungan_bumil.tgl_periksa LIKE '$tahun%'")
-            ->findAll();
-
+            ->join('kunjungan_bumil', "kunjungan_bumil.ibu = bumil.id AND kunjungan_bumil.tgl_periksa LIKE '$tahun%'");
+        if(is_login('bidan')){
+            $tmp->select('kunjungan_bumil.hpht, kunjungan_bumil.hpl, kunjungan_bumil.persalinan_sebemulnya, kunjungan_bumil.buku_kia');
+        }
+        $tmp = $tmp->findAll();
         $data = [];
-        $tmp2 = [];
 
         $daftarBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         foreach($daftarBulan as $k => $bulan){
@@ -98,6 +99,17 @@ class BumilModel extends Model
                 $usiaKehamilan = ($bulan >= 1 ? $bulan . ' Bulan, ' : '') . $hari . ' Hari';
             }
 
+           if(is_login('kader')){
+                $data[$v->bulan][$v->id] = [
+                    'nama' => $v->nama,
+                    'suami' => $v->nama_suami,
+                    'alamat' => $v->alamat,
+                    'ttl' => $v->ttl,
+                    'gravida' => $v->gravida,
+                    'usia_kehamilan' => $usiaKehamilan,
+                    'hasil' => $v->tb . '/' . $v->bb
+                ];
+           }elseif(is_login('bidan')){
             $data[$v->bulan][$v->id] = [
                 'nama' => $v->nama,
                 'suami' => $v->nama_suami,
@@ -105,8 +117,14 @@ class BumilModel extends Model
                 'ttl' => $v->ttl,
                 'gravida' => $v->gravida,
                 'usia_kehamilan' => $usiaKehamilan,
-                'hasil' => $v->tb . '/' . $v->bb
+                'bb' => $v->bb,
+                'tb' => $v->tb,
+                'hpl' => $v->hpl,
+                'hpht' => $v->hpht,
+                'persalinan_sebemulnya' => $v->persalinan_sebemulnya,
+                'buku_kia' => $v->buku_kia,
             ];
+           }
         }
 
         foreach ($data as $bulan => $d) {
