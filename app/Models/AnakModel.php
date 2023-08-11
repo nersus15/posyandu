@@ -144,7 +144,7 @@ class AnakModel extends Model
         $wilayah = getWil();
         $tmp = $this->select('anak.id, kunjungan_anak.dibuat, ibu, nama, kelamin, alamat, MONTH(kunjungan_anak.bulan) bulan, tanggal_lahir ttl, kunjungan_anak.tinggi tb, kunjungan_anak.berat bb')
             ->join('kunjungan_anak', "kunjungan_anak.anak = anak.id AND kunjungan_anak.bulan LIKE '$tahun%'")
-            ->where('kunjungan_bumil.registrar', sessiondata('login', 'username'))
+            ->where('kunjungan_anak.registrar', sessiondata('login', 'username'))
             ->findAll();
 
         $data = [];
