@@ -79,7 +79,8 @@ class BumilModel extends Model
     {
         $wilayah = getWil();
         $tmp = $this->select('bumil.id, nama, nama_suami, alamat, MONTH(kunjungan_bumil.tgl_periksa) bulan, tanggal_lahir ttl, ttl_estimasi estimasi, kunjungan_bumil.gravida, kunjungan_bumil.usia_kehamilan, kunjungan_bumil.tb, kunjungan_bumil.bb')
-            ->join('kunjungan_bumil', "kunjungan_bumil.ibu = bumil.id AND kunjungan_bumil.tgl_periksa LIKE '$tahun%'");
+            ->join('kunjungan_bumil', "kunjungan_bumil.ibu = bumil.id AND kunjungan_bumil.tgl_periksa LIKE '$tahun%'")
+            ->where('kunjungan_bumil.registrar', sessiondata('login', 'username'));
         if(is_login('bidan')){
             $tmp->select('kunjungan_bumil.hpht, kunjungan_bumil.hpl, kunjungan_bumil.persalinan_sebemulnya, kunjungan_bumil.buku_kia');
         }

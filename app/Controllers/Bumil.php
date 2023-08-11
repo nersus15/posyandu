@@ -20,7 +20,7 @@ class Bumil extends BaseController
     }
     public function index()
     {
-        $dataBumil =  $this->bumilModel->getBYWilker(sessiondata('login', 'wilayah_kerja'));
+        $dataBumil = $this->bumilModel->getBYWilker(sessiondata('login', 'wilayah_kerja'));
         $dataBumil = reversemapping('bumil', $dataBumil, [], [], true);
         $session = session();
         $wilayahModel = new WilayahModel();
@@ -557,7 +557,7 @@ class Bumil extends BaseController
                 'view' => 'components/datatables',
                 'badge' => '<span class="badge badge-pill badge-danger">' . count($dataLaporan[$k + 1]) . '</span>',
                 'data' => [
-                    'desc' => 'Laporan Untuk Ibu Hamil ynag Posyandu pada Bulan ' . $bulan . ' ' . $tahun,
+                    'desc' => 'Laporan Untuk Ibu Hamil yang Posyandu pada Bulan ' . $bulan . ' ' . $tahun,
                     'dtid' => 'dt-laporan-bumil-' . $bulan,
                     'header' => $header,
                     'data' => $dataLaporan[$k + 1],
@@ -566,7 +566,7 @@ class Bumil extends BaseController
                         [
                             'extend' => 'print',
                             'text' => 'Buat Pdf',
-                            'title' => 'Laporan Untuk Ibu Hamil ynag Posyandu pada Bulan ' . $bulan . ' ' . $tahun,
+                            'title' => 'Laporan Untuk Ibu Hamil yang Posyandu pada Bulan ' . $bulan . ' ' . $tahun,
                         ]
                     ]
                 ]

@@ -102,6 +102,7 @@ class LansiaModel extends Model
         $wilayah = getWil();
         $tmp = $this->select('lansia.id, lansia.nama, alamat, MONTH(kunjungan_lansia.bulan) bulan, tanggal_lahir ttl, nik, kunjungan_lansia.berat bb')
             ->join('kunjungan_lansia', "kunjungan_lansia.lansia = lansia.id AND kunjungan_lansia.bulan LIKE '$tahun%'")
+            ->where('kunjungan_bumil.registrar', sessiondata('login', 'username'))
             ->findAll();
 
         $data = [];
