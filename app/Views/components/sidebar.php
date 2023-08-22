@@ -34,10 +34,10 @@ if (!isset($activeMenu))
             <p>Dashboard</p>
           </a>
         </li>
-        <?php if (is_login('kader')) : ?>
+        <?php if (is_login()) : ?>
           <li class="nav-item <?= in_array($activeMenu, ['bayi', 'bayi05', 'bayi611', 'bayi1223', 'bayi2459']) ? 'menu-open' : '' ?>">
             <a href="<?= base_url('anak/list') ?>" class="nav-link <?= in_array($activeMenu, ['bayi', 'bayi05', 'bayi611', 'bayi1223', 'bayi2459']) ? 'actaive' : '' ?>">
-              <i class="nav-icon far fa-peoples"></i>
+              <i style="font-size: 25px; color:black;" class="nav-icon fas fa-child"></i>
               <p>
                 Data Bayi/Balita
                 <i class="right fas fa-angle-left"></i>
@@ -77,18 +77,19 @@ if (!isset($activeMenu))
             </ul>
           </li>
         <?php endif ?>
-        <?php if (is_login(['kader', 'bidan'])) : ?>
+        <?php if (is_login()) : ?>
           <li class="nav-item">
             <a href="<?= base_url('bumil') ?>" class="nav-link <?= $activeMenu == 'bumil' ? 'active' : '' ?>">
-              <!-- <i class="nav-icon far fa-circle text-info"></i> -->
+              <i class="nav-icon text-info"><img style="width: inherit;" class="text-info" src="<?= assets_url('img/icons/person-pregnant-solid.svg') ?>" alt="" srcset=""></i>
               <p>Data Ibu Hamil</p>
             </a>
           </li>
         <?php endif ?>
-        <?php if (is_login('kader')) : ?>
+        <?php if (is_login()) : ?>
           <li class="nav-item">
             <a href="<?= base_url('lansia') ?>" class="nav-link <?= $activeMenu == 'lansia' ? 'active' : '' ?>">
               <!-- <i class="nav-icon far fa-circle text-info"></i> -->
+              <i class="nav-icon text-info"><img style="width: inherit;" class="text-info" src="<?= assets_url('img/icons/person-cane-solid.svg') ?>" alt="" srcset=""></i>
               <p>Data Lansia</p>
             </a>
           </li>
@@ -118,7 +119,7 @@ if (!isset($activeMenu))
             </ul>
           </li>
         <?php endif ?>
-        <?php if(is_login(['bidan', 'kader'])):?>
+        <?php if(is_login(['kader', 'bidan'])):?>
         <li class="nav-item <?= in_array($activeMenu, ['report-bumil', 'report-anak', 'report-lansia']) ? 'menu-open' : '' ?>">
             <a href="<?= base_url('laporan/bumil') ?>" class="nav-link <?= in_array($activeMenu, ['report-bumil', 'report-anak', 'report-lansia']) ? 'actaive' : '' ?>">
               <i class="nav-icon far fa-peoples"></i>
@@ -134,7 +135,7 @@ if (!isset($activeMenu))
                   <p>Ibu Hamil</p>
                 </a>
               </li>
-              <?php if(is_login('kader')): ?>
+              <?php if(is_login()): ?>
                 <li class="nav-item">
                 <a href="<?= base_url('laporan/anak') ?>" class="nav-link <?= $activeMenu == 'report-anak' ? 'active' : '' ?>">
                   <!-- <i class="far fa-circle nav-icon"></i> -->

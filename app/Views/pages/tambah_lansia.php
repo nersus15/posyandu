@@ -80,10 +80,8 @@ if (isset($dataLansia) && !empty($dataLansia)) {
                     <div class="form-group">
                         <label for="alamat">Alamat <span class="symbol-required"></span></label>
                         <select required name="alamat" id="alamat" class="form-control">
-                            <option value="">Pilih</option>
-                            <?php foreach ($wil as $w) : ?>
-                                <option <?= $data['alamat'] == $w['id'] ? 'selected' : '' ?> value="<?= $w['id'] ?>"><?= $w['nama'] ?></option>
-                            <?php endforeach ?>
+                            <option value="52.03.18.2001">Desa Gelanggang</option>
+                            
                         </select>
                     </div>
                 </div>
@@ -126,7 +124,7 @@ if (isset($dataLansia) && !empty($dataLansia)) {
 
             }
         });
-        $("#alamat").select2();
+        // $("#alamat").select2();
 
         if (defData['pendidikan'])
             $("#pendidikan option[value='" + defData['pendidikan'] + "']").prop('selected', true).parent().trigger('change');

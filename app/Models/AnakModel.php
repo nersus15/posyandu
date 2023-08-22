@@ -56,6 +56,9 @@ class AnakModel extends Model
         if(!in_array($umur, ['05', '611', '1223', '2459']))
             $umur = null;
         $data = [];
+        $prefWil = prefiks_wilayah(sessiondata('login', 'wilayah_kerja'));
+        $query = $this->join('users', 'users.username = anak.registrar')
+                        ->like('wilayah_kerja', $prefWil, 'after');
         if(!empty($umur)){
             $tglIni = waktu(null, MYSQL_DATE_FORMAT);
             $satuBulan = 30 * 24 * 60 *60;
@@ -79,11 +82,9 @@ class AnakModel extends Model
                     $selesai = waktu(time() - ($satuBulan * 24), MYSQL_DATE_FORMAT);
                     break;
             }
-
-           $data = $this->where('registrar', sessiondata('login', 'username'))->where("tanggal_lahir BETWEEN '$mulai' AND '$selesai'")->findAll();
-        }else{
-            $data = $this->where('registrar', sessiondata('login', 'username'))->findAll();
+           $query->where("tanggal_lahir BETWEEN '$mulai' AND '$selesai'");
         }
+        $data = $query->findAll();
 
         return $data;
     }

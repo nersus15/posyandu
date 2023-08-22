@@ -56,7 +56,7 @@ class Bumil extends BaseController
                 'bumil' => [
                     'view' => 'components/datatables',
                     'data' => [
-                        'adaTambah' => is_login('kader'),
+                        'adaTambah' => is_login(),
                         'desc' => $session->getFlashdata('response'),
                         'dtid' => 'dt-bumil',
                         'header' => [
@@ -112,7 +112,7 @@ class Bumil extends BaseController
 
         $headerDT = [];
         $map = [];
-        if (is_login('kader')) {
+        if (is_login(['kader', 'admin'])) {
             $headerDT = [
                 'Tanggal Periksa' => 'tgl_periksa',
                 'Nama Pemeriksa' => 'nama_pemeriksa',
@@ -135,11 +135,11 @@ class Bumil extends BaseController
                 'Lingkar Lengan Atas' => 'lila',
                 'HB' => 'hb',
                 'Actions' => function ($rec) {
-                    return '<div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/update/' . $rec['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/delete/' . $rec['id']) . '" class="btb btn-hapus-kunjungan-bumil btn-xs btn-danger">Delete</a></div>';
+                    return (is_login('admin') ? '<div style="margin:auto" class="row"><a href="' . base_url('kunjungan/bumil/detail/' . $rec['id']) . '" class="btb btn-xs btn-info">Detail</a></div>' : '') . '<div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/update/' . $rec['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('kunjungan/bumil/delete/' . $rec['id']) . '" class="btb btn-hapus-kunjungan-bumil btn-xs btn-danger">Delete</a></div>';
                 }
 
             ];
-        } elseif (is_login('bidan')) {
+        } elseif (is_login(['bidan'])) {
             $headerDT = [
                 'Tanggal' => 'dibuat',
                 'Nama Pemeriksa' => 'nama_pemeriksa',
@@ -213,7 +213,7 @@ class Bumil extends BaseController
     }
     public function add()
     {
-        if (!is_login('kader'))
+        if (!is_login())
             return redirect('bumil');
         return $this->form();
     }

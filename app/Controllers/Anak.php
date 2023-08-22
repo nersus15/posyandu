@@ -66,12 +66,12 @@ class Anak extends BaseController
                 'anak' => [
                     'view' => 'components/datatables',
                     'data' => [
-                        'buttons' => [
+                        'buttons' => is_login(['kader', 'admin']) ? [
                             [
                                 'text' => 'Tambah Data',
                                 'action' => 'function( e, dt, node, config ){location.href = basepath + "anak/daftar"}'
                             ]
-                        ],
+                        ] : [],
                         'desc' => $session->getFlashdata('response'),
                         'dtid' => 'dt-anak',
                         'header' => [
@@ -105,7 +105,7 @@ class Anak extends BaseController
 
                             'AKB' => 'akb',
                             'Action' => function ($data) {
-                                return '<div style="margin:auto" class="row"><a href="' . base_url('anak/kunjungan/' . $data['id']) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('anak/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('anak/delete/' . $data['id']) . '" class="btb btn-hapus-anak btn-xs btn-danger">Delete</a></div>';
+                                return is_login('bidan') ? '<div style="margin:auto" class="row"><a href="' . base_url('anak/kunjungan/' . $data['id']) . '" class="btb btn-xs btn-info">Pemeriksaan</a></div>' : '<div style="margin:auto" class="row"><a href="' . base_url('anak/kunjungan/' . $data['id']) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('anak/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('anak/delete/' . $data['id']) . '" class="btb btn-hapus-anak btn-xs btn-danger">Delete</a></div>';
                             }
                         ],
                         'data' => $dataAnak
@@ -284,9 +284,9 @@ class Anak extends BaseController
                 $idKunjungan = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['id'] : null;
                 $pemeriksa = isset($rec['pemeriksaan'][$bulan]) ? ($rec['pemeriksaan'][$bulan]['nama_pemeriksa'] ?? '') : sessiondata('login', 'nama_lengkap');
                 $value = $berat . '/' . $tinggi;
-                $icon = '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="' . $pemeriksa . '" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . ($value == '-/-' ? null : $value) . '" data-tahun="' . $tahun . '" data-anak="' . $anak . '" class="text-warning ml-2 edit-kunjungan-anak fas fa-pencil-alt" aria-hidden="true"></i>';
+                $icon = is_login('bidan') ? '' : '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="' . $pemeriksa . '" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . ($value == '-/-' ? null : $value) . '" data-tahun="' . $tahun . '" data-anak="' . $anak . '" class="text-warning ml-2 edit-kunjungan-anak fas fa-pencil-alt" aria-hidden="true"></i>';
                 if ($value != '-/-') {
-                    $icon .= '<i style="font-size: 12px;cursor:pointer" data-kunjungan="' . $idKunjungan . '" class="text-danger ml-2 hapus-kunjungan-anak fas fa-trash-alt" aria-hidden="true"></i>';
+                    $icon .= is_login('bidan') ? '' : '<i style="font-size: 12px;cursor:pointer" data-kunjungan="' . $idKunjungan . '" class="text-danger ml-2 hapus-kunjungan-anak fas fa-trash-alt" aria-hidden="true"></i>';
                 }
                 return date('Y') == $tahun && $i > date('m') ? null : ($value . $icon);
             };

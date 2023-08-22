@@ -56,7 +56,7 @@ if (isset($dataBumil) && !empty($dataBumil)) {
             <form action="<?= $mode == 'baru' ? base_url('bumil/add') : base_url('bumil/set/' . $data['id']) ?>" method="POST">
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
-                        <?php if(sessiondata('login', 'role') == 'bidan'): ?>
+                        <?php if(is_login(['admin', 'bidan'])): ?>
                             <div class="form-group">
                             <label for="no">Nomor Ibu <span class="symbol-required"></span></label>
                             <input value="<?= $data['no'] ?>" type="text" required maxlength="10" minlength="9" name="no" id="no" class="form-control">
@@ -95,24 +95,19 @@ if (isset($dataBumil) && !empty($dataBumil)) {
                         <div class="form-group">
                             <label for="domisili">Alamat Domisili <span class="symbol-required"></span></label>
                             <select name="domisili" id="domisili" class="form-control">
-                                <option value="">Pilih</option>
-                                <?php foreach ($wil as $w) : ?>
-                                    <option <?= $data['domisili'] == $w['id'] ? 'selected' : '' ?> value="<?= $w['id'] ?>"><?= $w['nama'] ?></option>
-                                <?php endforeach ?>
+                                <option value="52.03.18.2001">Desa Gelanggang</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="alamat">Alamat <span class="symbol-required"></span></label>
                             <select required name="alamat" id="alamat" class="form-control">
-                                <option value="">Pilih</option>
-                                <?php foreach ($wil as $w) : ?>
-                                    <option <?= $data['alamat'] == $w['id'] ? 'selected' : '' ?> value="<?= $w['id'] ?>"><?= $w['nama'] ?></option>
-                                <?php endforeach ?>
+                                <option value="52.03.18.2001">Desa Gelanggang</option>
+                                
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="domisili">RT/RW</label>
-                            <input type="text" value="<?= $data['rt'] ?>" required name="rt" id="rt" class="form-control">
+                            <input type="text" value="<?= $data['rt'] ?>" name="rt" id="rt" class="form-control">
                         </div>
                     </div>
 
@@ -211,7 +206,7 @@ if (isset($dataBumil) && !empty($dataBumil)) {
 
             }
         });
-        $("#alamat").select2();
+        // $("#alamat").select2();
 
         if (defData['pendidikan'])
             $("#pendidikan option[value='" + defData['pendidikan'] + "']").prop('selected', true).parent().trigger('change');

@@ -15,7 +15,9 @@ class Lansia extends BaseController
     }
     public function index()
     {
-        $dataLansia = reversemapping('lansia', $this->lansiaModel->where('registrar', sessiondata('login', 'username'))->findAll(), [], [], true);
+        $prefwil = prefiks_wilayah(sessiondata('login', 'wilayah_kerja'));
+        $dataLansia = $this->lansiaModel->join('users', 'lansia.registrar = users.username')->like('wilayah_kerja', $prefwil)->findAll();
+        $dataLansia = reversemapping('lansia', $dataLansia, [], [], true);
         $session = session();
         $wilayahModel = new WilayahModel();
         $wilayah = $wilayahModel->findAll();
@@ -50,7 +52,7 @@ class Lansia extends BaseController
                 'lansia' => [
                     'view' => 'components/datatables',
                     'data' => [
-                        'buttons' => [
+                        'buttons' => is_login('bidan') ? [] : [
                             [
                                 'text' => 'Tambah Data',
                                 'action' => 'function( e, dt, node, config ){location.href = basepath + "lansia/add"}'
@@ -77,7 +79,7 @@ class Lansia extends BaseController
                             },
                             'NIK' => 'nik',
                             'Action' => function ($data) {
-                                return '<div style="margin:auto" class="row"><a href="' . base_url('lansia/kunjungan/' . $data['id'] . '/' . date('Y')) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/delete/' . $data['id']) . '" class="btb btn-hapus-lansia btn-xs btn-danger">Delete</a></div>';
+                                return is_login('bidan') ? '<div style="margin:auto" class="row"><a href="' . base_url('lansia/kunjungan/' . $data['id'] . '/' . date('Y')) . '" class="btb btn-xs btn-info">Pemeriksaan</a></div>' : '<div style="margin:auto" class="row"><a href="' . base_url('lansia/kunjungan/' . $data['id'] . '/' . date('Y')) . '" class="btb btn-xs btn-info">Periksa</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/update/' . $data['id']) . '" class="btb btn-xs btn-warning">Update</a></div><div style="margin:auto" class="row mt-2"><a href="' . base_url('lansia/delete/' . $data['id']) . '" class="btb btn-hapus-lansia btn-xs btn-danger">Delete</a></div>';
                             }
                         ],
                         'data' => $dataLansia
@@ -256,12 +258,12 @@ class Lansia extends BaseController
                 $idKunjungan = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['id'] : null;
                 $pemeriksa = isset($rec['pemeriksaan'][$bulan]) ? $rec['pemeriksaan'][$bulan]['nama_pemeriksa'] : sessiondata('login', 'nama_lengkap');
 
-                $icon = '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="' . $pemeriksa . '" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . $value . '" data-tahun="' . $tahunTerpilih . '" data-lansia="' . $lansia . '" class="text-warning ml-2 edit-kunjungan-lansia fas fa-pencil-alt" aria-hidden="true"></i>';
+                $icon = is_login('bidan') ? '' : '<i style="font-size: 12px;cursor:pointer" data-pemeriksa="' . $pemeriksa . '" data-kunjungan="' . $idKunjungan . '" data-bulan="' . $i . '" data-value="' . $value . '" data-tahun="' . $tahunTerpilih . '" data-lansia="' . $lansia . '" class="text-warning ml-2 edit-kunjungan-lansia fas fa-pencil-alt" aria-hidden="true"></i>';
                 if (date('Y') == $tahunTerpilih && $i > date('m'))
                     $icon = null;
 
                 if (!is_null($value)) {
-                    $icon .= '<i style="font-size: 12px;cursor:pointer" data-kunjungan="' . $idKunjungan . '" class="text-danger ml-2 hapus-kunjungan-lansia fas fa-trash-alt" aria-hidden="true"></i>';
+                    $icon .= is_login('bidan') ? '' : '<i style="font-size: 12px;cursor:pointer" data-kunjungan="' . $idKunjungan . '" class="text-danger ml-2 hapus-kunjungan-lansia fas fa-trash-alt" aria-hidden="true"></i>';
                 }
                 return ($value) . $icon;
             };

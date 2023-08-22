@@ -5,7 +5,6 @@ function(e, dt, node, config) {
     form.attr('action', basepath + 'user/save');
 
     modalComp.on('shown.bs.modal', function () {
-        form.find('#alamat, #wilker').select2();
         modalComp.removeAttr('tabindex');
         function perikasUsername(username) {
             if (!username) return;

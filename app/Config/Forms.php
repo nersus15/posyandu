@@ -76,6 +76,20 @@ class Forms extends BaseConfig{
         'ttd' => 'ttd',
         'hb' => 'hb'
     ];
+    public $periksa_bumil_admin = [
+        'tgl' => 'tgl_periksa',
+        'pemeriksa' => 'nama_pemeriksa',
+        'gravida' => 'gravida',
+        'paritas' => 'paritas',
+        'abortus' => 'paritas',
+        'bb' => 'bb',
+        'tb' => 'tb',
+        'lila' => 'lila',
+        'fundus' => 'fundus',
+        'usia_hamil' => 'usia_kehamilan',
+        'ttd' => 'ttd',
+        'hb' => 'hb'
+    ];
 
     public array $lansia = [
         'id' => 'id',

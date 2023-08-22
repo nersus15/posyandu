@@ -60,10 +60,12 @@ if (!isset($formid)) $formid = 'form-default';
                             <div class="form-group">
                                 <label for="alamat">Wilayah Kerja <span class="symbol-required"></span></label>
                                 <select required name="wilker" id="wilker" class="form-control">
-                                    <option value="">Pilih</option>
-                                    <?php foreach ($wil as $w) : ?>
-                                        <option value="<?= $w['id'] ?>"><?= $w['nama'] ?></option>
-                                    <?php endforeach ?>
+                                    <?php if($role == 'bidan'): ?>
+                                    <option value="52.03.18.0000">Kecamatan Sakra Timur</option>
+                                    <?php else: ?>
+                                        <option value="52.03.18.2001">Desa Gelanggang</option>
+                                    <?php endif ?>
+                                    
                                 </select>
                             </div>
                         </div>
